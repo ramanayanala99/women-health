@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+:root {
+  /* Aurora White / Fresh Bloom palette */
+  --color-pearl: #fffaf8;
+  --color-blush: #fdeff2;
+  --color-blush-deep: #fbe4ea;
+
+  --color-lavender-50: #f4effc;
+  --color-lavender-100: #e8ddf7;
+  --color-lavender-300: #c4a9ec;
+  --color-lavender: #a988dd;
+  --color-lavender-600: #8a63c9;
+
+  --color-orchid: #c48ada;
+  --color-rose: #f2879f;
+  --color-rose-light: #fbc9d4;
+  --color-rose-deep: #e2607e;
+
+  --color-peach: #ffcda6;
+  --color-peach-light: #ffe4cb;
+
+  --color-mint: #aee9cf;
+  --color-mint-light: #dbf6e9;
+  --color-sky: #a9dcef;
+  --color-sky-light: #ddf1fa;
+
+  --color-plum: #2f2440;
+  --color-plum-soft: #5c4d74;
+  --color-plum-faint: #8a7c9e;
+
+  --gradient-primary: linear-gradient(100deg, #a988dd 0%, #c48ada 52%, #f2879f 100%);
+  --gradient-soft: linear-gradient(160deg, #f4effc 0%, #fdeff2 50%, #ffe4cb 100%);
+
+  --background: var(--color-pearl);
+  --foreground: var(--color-plum);
+}
+
+@theme inline {
+  --color-pearl: var(--color-pearl);
+  --color-blush: var(--color-blush);
+  --color-blush-deep: var(--color-blush-deep);
+
+  --color-lavender-50: var(--color-lavender-50);
+  --color-lavender-100: var(--color-lavender-100);
+  --color-lavender-300: var(--color-lavender-300);
+  --color-lavender: var(--color-lavender);
+  --color-lavender-600: var(--color-lavender-600);
+
+  --color-orchid: var(--color-orchid);
+  --color-rose: var(--color-rose);
+  --color-rose-light: var(--color-rose-light);
+  --color-rose-deep: var(--color-rose-deep);
+
+  --color-peach: var(--color-peach);
+  --color-peach-light: var(--color-peach-light);
+
+  --color-mint: var(--color-mint);
+  --color-mint-light: var(--color-mint-light);
+  --color-sky: var(--color-sky);
+  --color-sky-light: var(--color-sky-light);
+
+  --color-plum: var(--color-plum);
+  --color-plum-soft: var(--color-plum-soft);
+  --color-plum-faint: var(--color-plum-faint);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-manrope);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+/* Frosted glass card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 20px 60px -20px rgba(169, 136, 221, 0.25), 0 4px 20px -8px rgba(242, 135, 159, 0.15);
+}
+
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-gradient {
+  background: var(--gradient-primary);
+  background-size: 160% 160%;
+  transition: background-position 0.5s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 12px 30px -10px rgba(169, 136, 221, 0.55);
+}
+
+.btn-gradient:hover {
+  background-position: 100% 50%;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 36px -8px rgba(226, 96, 126, 0.45);
+}
+
+.blob {
+  position: absolute;
+  filter: blur(60px);
+  opacity: 0.55;
+  border-radius: 999px;
+  z-index: 0;
+}
+
+::selection {
+  background: var(--color-rose-light);
+  color: var(--color-plum);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-lavender-100);
+  border-radius: 999px;
+}
