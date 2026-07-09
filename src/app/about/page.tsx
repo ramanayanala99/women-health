@@ -4,39 +4,25 @@ import { Container, Pill, SectionHeading, GlowBlob, Card } from "@/components/ui
 
 export const metadata: Metadata = {
   title: "About — CycleAI",
-  description: "Why we're building CycleAI — a privacy-first AI Women's Health Operating System designed to help women understand their bodies with clarity and calm.",
+  description: "We believe every woman deserves to understand her body. The mission, vision, values, and long-term roadmap behind CycleAI.",
 };
 
 const values = [
-  {
-    icon: "🩶",
-    title: "Privacy is non-negotiable",
-    desc: "Health data is deeply personal. We design every feature assuming it should never leave your control.",
-  },
-  {
-    icon: "🌿",
-    title: "Educate, never diagnose",
-    desc: "We give women clarity and language for their own patterns — and know exactly where our role ends and a doctor's begins.",
-  },
-  {
-    icon: "🎨",
-    title: "Beauty is respect",
-    desc: "A calm, considered design isn't decoration — it's a sign we take the person on the other side of the screen seriously.",
-  },
-  {
-    icon: "🔬",
-    title: "Grounded in real science",
-    desc: "Every insight is shaped by established reproductive health knowledge, not trends or guesswork.",
-  },
+  { icon: "🤝", title: "Trust", desc: "Every interaction is designed to earn and keep your confidence, not just your attention." },
+  { icon: "🔒", title: "Privacy", desc: "Your health data is yours — encrypted, controlled, and never sold." },
+  { icon: "💗", title: "Compassion", desc: "We build for real bodies, real days, and real emotions — never judgment." },
+  { icon: "🔬", title: "Scientific responsibility", desc: "Every insight is grounded in evidence and honest about its limits." },
+  { icon: "✨", title: "Beautiful simplicity", desc: "Complex science, explained simply — calm design over clinical clutter." },
+  { icon: "🧭", title: "User control", desc: "You decide what's tracked, what's shared, and what's deleted. Always." },
 ];
 
-const team = [
-  { initial: "E", name: "Elena", role: "Founder & CEO" },
-  { initial: "M", name: "Maya", role: "Head of AI" },
-  { initial: "R", name: "Riya", role: "Head of Design" },
-  { initial: "S", name: "Sofia", role: "Clinical Advisor, OB-GYN" },
-  { initial: "A", name: "Amara", role: "Head of Privacy & Security" },
-  { initial: "J", name: "Jade", role: "Behavioral Health Advisor" },
+const roadmap = [
+  { title: "Menstrual health", desc: "Understanding your cycle, mood, energy, and symptoms.", status: "Available now" },
+  { title: "Fertility awareness", desc: "Supporting those trying to understand their fertile window.", status: "On the roadmap" },
+  { title: "Pregnancy", desc: "Guidance and tracking built for the nine months ahead.", status: "On the roadmap" },
+  { title: "Postpartum", desc: "Support for recovery, mood, and the return to your rhythm.", status: "On the roadmap" },
+  { title: "Perimenopause", desc: "Making sense of the transition years, with clarity instead of confusion.", status: "On the roadmap" },
+  { title: "Menopause", desc: "Wellness guidance for a new chapter of your body's story.", status: "On the roadmap" },
 ];
 
 export default function AboutPage() {
@@ -47,47 +33,84 @@ export default function AboutPage() {
         <GlowBlob className="-right-20 top-32 h-72 w-72" color="sky" />
         <Container className="relative text-center">
           <Pill tone="rose">Our story</Pill>
-          <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-semibold leading-tight text-plum sm:text-5xl">
-            Women deserve better tools to understand their own bodies
+          <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-semibold leading-tight text-plum sm:text-5xl">
+            We believe every woman deserves to understand her body.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-plum-soft">
-            Most period trackers stop at a calendar. We started CycleAI to ask
-            a bigger question: what if your cycle, mood, energy, sleep, and
-            stress could all be understood together — calmly, privately, and
-            personally?
+            An AI Women&apos;s Health Operating System, built to explain what
+            your body is telling you — before symptoms happen.
           </p>
         </Container>
       </section>
 
+      {/* STORY */}
+      <section className="pb-20">
+        <Container className="mx-auto max-w-3xl">
+          <p className="text-base leading-relaxed text-plum-soft sm:text-lg">
+            Every month, millions of women experience changes in energy,
+            mood, pain, sleep, cravings, and stress. Most apps only track
+            dates.
+          </p>
+          <p className="mt-5 font-display text-xl leading-relaxed text-plum sm:text-2xl">
+            CycleAI was created to help women understand patterns, prepare
+            earlier, and feel more in control.
+          </p>
+        </Container>
+      </section>
+
+      {/* FOUNDER NOTE */}
+      <section className="pb-20">
+        <Container className="mx-auto max-w-3xl">
+          <div className="glass-card rounded-[2rem] p-8 sm:p-10">
+            <span className="text-3xl text-lavender-300">&ldquo;</span>
+            <p className="mt-2 font-display text-lg leading-relaxed text-plum sm:text-xl">
+              I built CycleAI because I was tired of tools that only counted
+              days. Every woman deserves an app that understands the whole
+              picture — mood, energy, sleep, stress — not just a calendar.
+            </p>
+            <div className="mt-6 flex items-center gap-3">
+              <span
+                className="grid h-11 w-11 place-items-center rounded-full text-base font-semibold text-white"
+                style={{ background: "var(--gradient-primary)" }}
+              >
+                E
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-plum">Elena</p>
+                <p className="text-xs text-plum-faint">Founder & CEO, CycleAI</p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* MISSION & VISION */}
       <section className="pb-24">
-        <Container className="mx-auto max-w-3xl space-y-6 text-base leading-relaxed text-plum-soft">
-          <p>
-            CycleAI began with a simple frustration: existing apps treated the
-            menstrual cycle as an isolated event, disconnected from mood,
-            energy, sleep, and stress — even though anyone who has lived in a
-            body knows they&apos;re deeply connected.
-          </p>
-          <p>
-            We set out to build something different — an AI Women&apos;s
-            Health Operating System that feels as considered as the products
-            women already love, and as trustworthy as the healthcare
-            professionals they rely on. Soft where hospitals feel sterile.
-            Clear where wellness apps get vague. Private by default, not by
-            afterthought.
-          </p>
-          <p>
-            CycleAI is still early — we&apos;re building it in the open with a
-            beta community, real clinical input, and a firm belief that
-            understanding your body shouldn&apos;t require a medical degree or
-            a compromise on privacy.
-          </p>
+        <Container>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="rounded-[2rem] bg-gradient-to-br from-lavender-50 to-blush p-8 sm:p-10">
+              <Pill tone="lavender">Our mission</Pill>
+              <p className="mt-5 font-display text-2xl font-semibold leading-snug text-plum sm:text-3xl">
+                &ldquo;Help women understand their bodies before symptoms
+                happen.&rdquo;
+              </p>
+            </div>
+            <div className="rounded-[2rem] bg-gradient-to-br from-sky-light to-mint-light p-8 sm:p-10">
+              <Pill tone="sky">Our vision</Pill>
+              <p className="mt-5 font-display text-2xl font-semibold leading-snug text-plum sm:text-3xl">
+                &ldquo;Build the world&apos;s most trusted AI Women&apos;s
+                Health Operating System.&rdquo;
+              </p>
+            </div>
+          </div>
         </Container>
       </section>
 
+      {/* VALUES */}
       <section className="pb-24">
         <Container>
           <SectionHeading eyebrow="What we believe" title="The values behind every decision" />
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {values.map((v) => (
               <Card key={v.title}>
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-blush text-xl">
@@ -101,24 +124,33 @@ export default function AboutPage() {
         </Container>
       </section>
 
+      {/* ROADMAP */}
       <section className="pb-24">
         <Container>
-          <SectionHeading eyebrow="The team" title="Building CycleAI, together" />
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {team.map((t) => (
-              <Card key={t.name} className="flex items-center gap-4">
-                <span
-                  className="grid h-14 w-14 shrink-0 place-items-center rounded-full text-lg font-semibold text-white"
-                  style={{ background: "var(--gradient-primary)" }}
-                >
-                  {t.initial}
-                </span>
-                <div>
-                  <p className="font-display text-base font-semibold text-plum">{t.name}</p>
-                  <p className="text-sm text-plum-soft">{t.role}</p>
+          <SectionHeading
+            eyebrow="Where we're headed"
+            title="A lifelong companion, not just a phase"
+            description="CycleAI starts with the menstrual cycle — and is built to grow alongside every stage of a woman's life."
+          />
+          <div className="relative mt-16">
+            <div className="absolute left-4 top-2 bottom-2 hidden w-px bg-lavender-100 sm:block lg:left-1/2" />
+            <div className="grid gap-6 sm:grid-cols-2">
+              {roadmap.map((r, i) => (
+                <div key={r.title} className={`relative pl-10 sm:pl-0 ${i % 2 === 0 ? "lg:pr-10 lg:text-right" : "lg:col-start-2 lg:pl-10"}`}>
+                  <span
+                    className={`absolute left-2.5 top-1.5 h-3 w-3 rounded-full sm:left-2.5 lg:left-auto ${
+                      i % 2 === 0 ? "lg:-right-[7px]" : "lg:-left-[7px]"
+                    }`}
+                    style={{ background: "var(--gradient-primary)" }}
+                  />
+                  <div className="glass-card rounded-2xl p-6">
+                    <Pill tone={r.status === "Available now" ? "mint" : "lavender"}>{r.status}</Pill>
+                    <h3 className="mt-4 font-display text-lg font-semibold text-plum">{r.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-plum-soft">{r.desc}</p>
+                  </div>
                 </div>
-              </Card>
-            ))}
+              ))}
+            </div>
           </div>
         </Container>
       </section>
