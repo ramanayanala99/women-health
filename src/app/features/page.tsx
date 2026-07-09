@@ -1,102 +1,85 @@
 import type { Metadata } from "next";
 import Button from "@/components/Button";
-import { Container, Pill, SectionHeading, GlowBlob, DisclaimerBanner } from "@/components/ui";
+import { Container, Pill, GlowBlob, DisclaimerBanner } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Features — CycleAI",
-  description: "Explore every part of the CycleAI Women's Health Operating System — cycle intelligence, mood, energy, symptoms, sleep, stress, AI coaching, and privacy controls.",
+  description: "AI Body Forecast, Cycle Timeline, AI Coach, Symptom Tracker, Insights & Trends, Privacy First, Monthly Reports, and Wellness Guidance — everything inside CycleAI.",
 };
 
-const groups: {
-  eyebrow: string;
-  title: string;
-  tone: "lavender" | "rose" | "peach" | "sky" | "mint";
+type Tone = "lavender" | "rose" | "peach" | "sky" | "mint";
+
+const iconBg: Record<Tone, string> = {
+  lavender: "bg-lavender-50",
+  rose: "bg-blush",
+  peach: "bg-peach-light",
+  sky: "bg-sky-light",
+  mint: "bg-mint-light",
+};
+
+const features: {
   icon: string;
-  features: { title: string; desc: string; soon?: boolean }[];
+  title: string;
+  tone: Tone;
+  desc: string;
+  items?: string[];
+  highlight?: string;
 }[] = [
   {
-    eyebrow: "Cycle",
-    title: "Cycle intelligence",
+    icon: "🔮",
+    title: "AI Body Forecast",
     tone: "lavender",
-    icon: "🌙",
-    features: [
-      { title: "Adaptive predictions", desc: "Cycle and ovulation windows that recalibrate as your own data grows." },
-      { title: "Phase-aware view", desc: "See menstrual, follicular, ovulation, and luteal phases mapped to how you actually feel." },
-      { title: "Irregular cycle flags", desc: "Gentle, clear flags when timing shifts outside your usual range." },
-      { title: "Multi-year history", desc: "Zoom out across months and years to see the bigger picture of your body." },
-    ],
+    desc: "CycleAI looks ahead — not just at where you are today, but at what tomorrow may bring.",
+    items: ["Energy", "Mood", "Pain", "Cravings", "Stress sensitivity", "Sleep readiness", "Workout readiness"],
   },
   {
-    eyebrow: "Mood & Energy",
-    title: "Mood & energy patterns",
+    icon: "🗓️",
+    title: "Cycle Timeline",
     tone: "rose",
-    icon: "💗",
-    features: [
-      { title: "Daily check-ins", desc: "A ten-second tap to log how you feel emotionally and physically." },
-      { title: "Mood-cycle correlation", desc: "Visualize how mood shifts alongside your cycle phase over time." },
-      { title: "Energy curve", desc: "Understand your natural highs and lows across each month." },
-      { title: "Gentle pattern alerts", desc: "Notice recurring emotional patterns without judgment or alarm." },
-    ],
+    desc: "Your whole month, laid out clearly — phases, predictions, and history in one continuous view.",
+    items: ["Cycle phase", "Period prediction", "Ovulation window", "Fertility awareness", "Symptom history", "Mood & energy patterns"],
   },
   {
-    eyebrow: "Symptoms",
-    title: "Symptom tracking",
-    tone: "rose",
-    icon: "🌸",
-    features: [
-      { title: "One-tap logging", desc: "Cramps, headaches, bloating, acne, cravings, and more — logged in seconds." },
-      { title: "Custom symptoms", desc: "Add your own symptoms and track what matters specifically to you." },
-      { title: "Severity over time", desc: "See whether a symptom is easing, holding steady, or intensifying." },
-      { title: "Recurring pattern detection", desc: "Spot symptoms that reliably show up at the same point each cycle." },
-    ],
-  },
-  {
-    eyebrow: "Sleep",
-    title: "Sleep awareness",
+    icon: "💬",
+    title: "AI Coach",
     tone: "sky",
-    icon: "😴",
-    features: [
-      { title: "Sleep duration & quality", desc: "Track how much and how well you're sleeping, night by night." },
-      { title: "Sleep-mood-energy links", desc: "See how sleep quietly shapes your next day's mood and energy." },
-      { title: "Wind-down guidance", desc: "Gentle, personalized suggestions for better rest before bed." },
-      { title: "Wearable sync", desc: "Bring in sleep data automatically from your favorite wearable.", soon: true },
-    ],
+    desc: "Ask questions in plain language and get calm, personalized explanations grounded in your own data.",
+    items: ["Natural conversation", "Context-aware answers", "Available anytime", "Always knows its limits"],
   },
   {
-    eyebrow: "Stress",
-    title: "Stress & calm",
+    icon: "🌸",
+    title: "Symptom Tracker",
+    tone: "rose",
+    desc: "Log how you feel in seconds — everything in one place, nothing forgotten.",
+    items: ["Pain", "Mood", "Energy", "Sleep", "Stress", "Headaches", "Bloating", "Cravings", "Acne", "Exercise", "Hydration", "Notes"],
+  },
+  {
+    icon: "📈",
+    title: "Insights & Trends",
     tone: "mint",
-    icon: "🧘",
-    features: [
-      { title: "Stress check-ins", desc: "A quick daily pulse on how stressed or at ease you're feeling." },
-      { title: "Calm exercises", desc: "Short breathing and grounding exercises timed to your needs." },
-      { title: "Stress-cycle insights", desc: "Understand how stress and your cycle influence each other." },
-      { title: "Recovery nudges", desc: "Gentle reminders to rest when your patterns suggest you need it." },
-    ],
+    desc: "CycleAI surfaces the patterns hiding in your logs — clearly, without the guesswork.",
+    highlight: "“Your pain score tends to be lower after nights with more than 7 hours of sleep.”",
   },
   {
-    eyebrow: "AI Coach",
-    title: "Your personal AI coach",
-    tone: "lavender",
-    icon: "✦",
-    features: [
-      { title: "Natural conversation", desc: "Ask questions in plain language and get context-aware answers." },
-      { title: "Personalized insights", desc: "Guidance shaped by your own history — not generic population averages." },
-      { title: "Weekly digest", desc: "A calm summary of the patterns CycleAI noticed this week." },
-      { title: "Knows its limits", desc: "Always recommends professional care for anything severe or unusual." },
-    ],
-  },
-  {
-    eyebrow: "Privacy",
-    title: "Privacy & control",
-    tone: "peach",
     icon: "🔒",
-    features: [
-      { title: "End-to-end encryption", desc: "Your data is encrypted in transit and at rest, always." },
-      { title: "Export anytime", desc: "Download your full history whenever you want it, in your format." },
-      { title: "Delete anytime", desc: "Permanently remove your data with a single, honest request." },
-      { title: "Never sold", desc: "Identifiable health data is never sold — a permanent product promise." },
-    ],
+    title: "Privacy First",
+    tone: "peach",
+    desc: "Your health data is some of the most sensitive information you own — treated that way from day one.",
+    items: ["Export your data", "Delete your account", "Granular privacy controls", "Protected, encrypted storage"],
+  },
+  {
+    icon: "📄",
+    title: "Monthly Reports",
+    tone: "lavender",
+    desc: "A clear, doctor-friendly summary of your month — ready whenever you need it for an appointment.",
+    items: ["Cycle summary", "Symptom overview", "Sleep & stress trends", "Shareable PDF export"],
+  },
+  {
+    icon: "🌿",
+    title: "Wellness Guidance",
+    tone: "mint",
+    desc: "Gentle, personalized suggestions for the things that actually move the needle.",
+    items: ["Hydration", "Nutrition", "Movement", "Rest", "Stress management"],
   },
 ];
 
@@ -107,37 +90,54 @@ export default function FeaturesPage() {
         <GlowBlob className="-left-24 -top-16 h-80 w-80" color="mint" />
         <GlowBlob className="-right-20 top-32 h-72 w-72" color="rose" />
         <Container className="relative text-center">
-          <Pill tone="lavender">Everything inside CycleAI</Pill>
-          <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-semibold leading-tight text-plum sm:text-5xl">
-            One calm home for every signal your body sends
+          <Pill tone="lavender">Features</Pill>
+          <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-semibold leading-tight text-plum sm:text-5xl">
+            Everything your body wants to tell you — in one intelligent app.
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-plum-soft">
-            Cycle, mood, energy, symptoms, sleep, stress, and an AI coach that
-            ties it all together — with privacy built in from the start.
+            CycleAI brings cycle tracking, AI forecasting, symptom logging,
+            insights, and wellness guidance into one beautiful daily
+            companion.
           </p>
         </Container>
       </section>
 
       <section className="pb-24">
-        <Container className="space-y-20">
-          {groups.map((g) => (
-            <div key={g.title}>
-              <SectionHeading align="left" eyebrow={g.eyebrow} title={g.title} />
-              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                {g.features.map((f) => (
-                  <div key={f.title} className="glass-card relative rounded-2xl p-6">
-                    {f.soon && (
-                      <span className="absolute right-4 top-4">
-                        <Pill tone={g.tone}>Coming soon</Pill>
-                      </span>
-                    )}
-                    <h3 className="pr-16 font-display text-base font-semibold text-plum">{f.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-plum-soft">{f.desc}</p>
+        <Container>
+          <div className="grid gap-8 lg:grid-cols-2">
+            {features.map((f) => (
+              <div key={f.title} className="glass-card rounded-[2rem] p-8 sm:p-10">
+                <span className={`grid h-14 w-14 place-items-center rounded-2xl text-2xl ${iconBg[f.tone]}`}>
+                  {f.icon}
+                </span>
+                <h3 className="mt-6 font-display text-xl font-semibold text-plum sm:text-2xl">
+                  {f.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-plum-soft sm:text-base">{f.desc}</p>
+
+                {f.items && (
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {f.items.map((item) => (
+                      <Pill key={item} tone={f.tone}>
+                        {item}
+                      </Pill>
+                    ))}
                   </div>
-                ))}
+                )}
+
+                {f.highlight && (
+                  <div className="mt-6 rounded-2xl border border-mint bg-mint-light p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#1f6b4a]">
+                      Sample insight
+                    </p>
+                    <p className="mt-1.5 text-sm italic leading-relaxed text-[#2a5b45]">
+                      {f.highlight}
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </Container>
       </section>
 
