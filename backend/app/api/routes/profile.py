@@ -22,6 +22,8 @@ def update_profile(
 ) -> User:
     if payload.full_name is not None:
         current_user.full_name = payload.full_name
+    if payload.life_stage is not None:
+        current_user.life_stage = payload.life_stage
 
     db.add(current_user)
     db.commit()

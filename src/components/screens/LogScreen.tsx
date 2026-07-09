@@ -2,7 +2,7 @@ import StatusBar from "./StatusBar";
 import BottomTabBar from "./BottomTabBar";
 
 const moods = ["😔", "😐", "🙂", "😊", "🥰"];
-const symptoms = ["Cramps", "Headache", "Bloating", "Cravings", "Fatigue", "Acne"];
+const symptoms = ["Cramps", "Headache", "Bloating", "Cravings", "Fatigue", "Acne", "Hot flashes", "Night sweats"];
 
 function LevelRow({ label, level, tone = "var(--gradient-primary)" }: { label: string; level: number; tone?: string }) {
   return (

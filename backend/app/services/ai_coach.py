@@ -25,6 +25,7 @@ from app.services.safety import (
     AI_COACH_SYSTEM_PROMPT,
     ESCALATION_NOTICE,
     detect_severity_flag,
+    has_notable_bleeding_pattern,
     has_persistent_or_worsening_pattern,
 )
 
@@ -32,25 +33,35 @@ logger = logging.getLogger(__name__)
 
 MAX_HISTORY_TURNS = 10
 
+LIFE_STAGE_LABELS = {
+    "reproductive": "reproductive years",
+    "perimenopause": "perimenopause",
+    "menopause": "menopause",
+    "postmenopause": "postmenopause",
+    "unsure": "not specified",
+}
 
-def _build_context_summary(db: Session, user_id: str) -> str:
-    forecast = build_forecast(db, user_id)
+
+def _build_context_summary(db: Session, user: User) -> str:
+    forecast = build_forecast(db, user.id, life_stage=user.life_stage)
     latest_log = (
         db.query(Symptom)
-        .filter(Symptom.user_id == user_id)
+        .filter(Symptom.user_id == user.id)
         .order_by(Symptom.log_date.desc())
         .first()
     )
 
-    lines = []
+    lines = [f"Life stage: {LIFE_STAGE_LABELS.get(user.life_stage, 'not specified')}."]
     if forecast.has_data:
         lines.append(
             f"Current cycle day: {forecast.current_cycle_day} ({forecast.current_phase} phase)."
         )
-        lines.append(
-            f"Predicted next period in {forecast.days_until_next_period} day(s); "
-            f"confidence {forecast.confidence}."
-        )
+        if forecast.predicted_next_period is not None:
+            lines.append(
+                f"Predicted next period in {forecast.days_until_next_period} day(s); "
+                f"confidence {forecast.confidence}."
+            )
+        lines.append(forecast.note)
     else:
         lines.append("The user has not logged any cycles yet.")
 
@@ -72,7 +83,7 @@ def _build_context_summary(db: Session, user_id: str) -> str:
     return "\n".join(lines)
 
 
-def _offline_template_reply(db: Session, user_id: str, message: str, context_summary: str) -> str:
+def _offline_template_reply(db: Session, user: User, message: str, context_summary: str) -> str:
     """A safe, honest fallback used when no OPENAI_API_KEY is configured.
 
     Still genuinely useful rather than just an apology: it grounds the reply
@@ -81,8 +92,8 @@ def _offline_template_reply(db: Session, user_id: str, message: str, context_sum
     patterns, give wellness education, suggest hydration/rest/movement/
     nutrition/sleep/stress reduction) holds even without a live model.
     """
-    forecast = build_forecast(db, user_id)
-    recommendations = generate_recommendations(db, user_id, forecast)
+    forecast = build_forecast(db, user.id, life_stage=user.life_stage)
+    recommendations = generate_recommendations(db, user.id, forecast)
     suggestion_lines = "\n".join(f"- {rec.title}: {rec.description}" for rec in recommendations[:2])
 
     return (
@@ -122,12 +133,15 @@ def _call_openai(
 
 def chat(db: Session, user: User, message: str, session_id: str | None) -> tuple[str, bool, str]:
     session_id = session_id or str(uuid.uuid4())
-    context_summary = _build_context_summary(db, user.id)
+    context_summary = _build_context_summary(db, user)
 
-    # Two independent signals: what the user just typed, and what their recent
-    # logs show. Either one is enough — see services.safety for why.
-    escalation_flagged = detect_severity_flag(message) or has_persistent_or_worsening_pattern(
-        db, user.id
+    # Three independent signals: what the user just typed, what their recent
+    # symptom logs show, and what their cycle history shows. Any one is
+    # enough — see services.safety for why.
+    escalation_flagged = (
+        detect_severity_flag(message)
+        or has_persistent_or_worsening_pattern(db, user.id)
+        or has_notable_bleeding_pattern(db, user.id, user.life_stage)
     )
 
     history_rows = (
@@ -142,7 +156,7 @@ def chat(db: Session, user: User, message: str, session_id: str | None) -> tuple
     system_prompt = f"{AI_COACH_SYSTEM_PROMPT}\n\nUser context:\n{context_summary}"
     reply = _call_openai(system_prompt, history, message)
     if reply is None:
-        reply = _offline_template_reply(db, user.id, message, context_summary)
+        reply = _offline_template_reply(db, user, message, context_summary)
 
     if escalation_flagged and ESCALATION_NOTICE not in reply:
         reply = f"{reply}\n\n{ESCALATION_NOTICE}"

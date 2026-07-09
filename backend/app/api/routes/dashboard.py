@@ -22,7 +22,7 @@ def get_dashboard(
     db: Session = Depends(get_db),
 ) -> DashboardOut:
     today = date.today()
-    forecast = build_forecast(db, current_user.id, today)
+    forecast = build_forecast(db, current_user.id, today, current_user.life_stage)
 
     latest_log = (
         db.query(Symptom)

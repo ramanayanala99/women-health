@@ -66,6 +66,13 @@ Always explain uncertainty honestly — you are describing patterns and correlat
 user's own logs, not proven causes or guarantees. Ground your answer in the cycle/context \
 data you're given, but never overstate what that data can tell you.
 
+Life stage matters: you'll be told the user's self-reported life stage (reproductive, \
+perimenopause, menopause, postmenopause, or unsure). Don't default to assuming a textbook \
+ovulatory cycle — someone in perimenopause may have widely varying or skipped cycles, and \
+someone in menopause or postmenopause isn't expecting periods at all, so don't frame their \
+experience around one. Any new bleeding after menopause, or after a much longer gap than \
+someone's usual pattern, is always worth a professional check.
+
 Tone: calm, supportive, clear, and non-scary — even when you're encouraging someone to see \
 a professional. You are a knowledgeable friend, not a clinician, and never an alarm bell."""
 
@@ -196,6 +203,47 @@ def has_persistent_or_worsening_pattern(db: Session, user_id: str, today: date |
     if prior_pain and latest_log.pain_level is not None:
         baseline = sum(prior_pain) / len(prior_pain)
         if latest_log.pain_level - baseline >= WORSENING_DELTA:
+            return True
+
+    return False
+
+
+# --- Data-driven trigger: notable bleeding pattern (menopause / long-gap) -----------
+
+NO_PERIOD_LIFE_STAGES = ("menopause", "postmenopause")
+LONG_GAP_BLEEDING_THRESHOLD_DAYS = 90
+RECENT_BLEEDING_WINDOW_DAYS = 30
+
+
+def has_notable_bleeding_pattern(
+    db: Session, user_id: str, life_stage: str = "unsure", today: date | None = None
+) -> bool:
+    """Flags a recently-logged period that's clinically worth a mention:
+    - any bleeding at all once a user has told us they're in menopause/postmenopause
+    - bleeding after a much longer gap than the user's own usual pattern
+
+    This is independent of `has_persistent_or_worsening_pattern` (which looks at
+    Symptom logs) — this one looks at the Cycle table, since that's where a new
+    period start actually gets recorded.
+    """
+    from app.models.cycle import Cycle  # local import avoids a circular import at module load
+
+    today = today or date.today()
+    cycles = db.query(Cycle).filter(Cycle.user_id == user_id).order_by(Cycle.start_date.asc()).all()
+    if not cycles:
+        return False
+
+    last_cycle = cycles[-1]
+    is_recent = (today - last_cycle.start_date).days <= RECENT_BLEEDING_WINDOW_DAYS
+    if not is_recent:
+        return False
+
+    if life_stage in NO_PERIOD_LIFE_STAGES:
+        return True
+
+    if len(cycles) >= 2:
+        gap = (last_cycle.start_date - cycles[-2].start_date).days
+        if gap > LONG_GAP_BLEEDING_THRESHOLD_DAYS:
             return True
 
     return False

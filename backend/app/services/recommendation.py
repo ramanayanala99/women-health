@@ -101,6 +101,24 @@ def generate_recommendations(
             )
         )
 
+    if forecast.has_data and forecast.current_phase == "irregular":
+        recs.append(
+            Recommendation(
+                icon="🌡️",
+                title="Track what you notice, at your own pace",
+                description="Cycles can become less predictable during perimenopause or after a longer gap. Logging what comes up — hot flashes, sleep changes, mood — helps build a clearer picture over time.",
+            )
+        )
+
+    if forecast.has_data and forecast.current_phase in ("menopause", "postmenopause"):
+        recs.append(
+            Recommendation(
+                icon="🌙",
+                title="Rest and cooling routines can help",
+                description="Sleep and temperature regulation often need extra care in menopause. A cool bedroom, breathable layers, and a steady wind-down routine may help with sleep and hot flashes.",
+            )
+        )
+
     if avg_energy is not None and avg_energy <= 2:
         recs.append(
             Recommendation(

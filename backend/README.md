@@ -51,7 +51,15 @@ specific calculation, which matters a lot for a health product.
 1. **Cycle Prediction Engine** (`cycle_prediction.py`) — learns the user's
    average cycle/period length from their own logged cycles, predicts the
    next period, ovulation date, and fertile window, and reports a confidence
-   score plus an irregularity flag.
+   score plus an irregularity flag. It's also **life-stage aware**: it reads
+   the user's self-reported `life_stage` (`reproductive` / `perimenopause` /
+   `menopause` / `postmenopause` / `unsure`, set via `PUT /profile`) so it
+   doesn't force a 45-year-old in perimenopause into a textbook 28-day
+   forecast. Perimenopause (or a data-driven long gap / very long logged
+   cycle, detected independent of self-report) switches the phase to
+   `"irregular"` with capped confidence and a note explaining why. Menopause
+   and postmenopause stop forecasting a next period entirely, since one
+   isn't expected.
 2. **Symptom Prediction Engine** (`symptom_prediction.py`) — looks at which
    symptoms have historically clustered around the same point in past cycles
    and surfaces likely symptoms for the next few days.
@@ -94,15 +102,22 @@ independent ways, and either one is enough to trigger it:
    persistent for that user, sudden worsening, fear/danger/emergency
    language, and pregnancy mentioned alongside a concerning symptom.
 2. **Data-based** (`has_persistent_or_worsening_pattern`) — looks at the
-   user's own last 5 days of logs, independent of what they just typed, and
-   flags high pain or a repeated symptom recurring across most of those
-   days, or today's pain level jumping well above their own recent
+   user's own last 5 days of symptom logs, independent of what they just
+   typed, and flags high pain or a repeated symptom recurring across most of
+   those days, or today's pain level jumping well above their own recent
    baseline. This is what catches "persistent" and "suddenly worse" even
    when the current message doesn't mention it at all.
+3. **Data-based** (`has_notable_bleeding_pattern`) — looks at the Cycle
+   table (not symptom logs) and flags any recently-logged period once a
+   user has told us she's in menopause or postmenopause, or a period that
+   follows a much longer gap than her own usual pattern. This is the
+   perimenopause-relevant check: bleeding after menopause, or after a long
+   unexplained gap, is always worth a professional look regardless of what
+   the conversation is actually about.
 
-Both checks are intentionally conservative and biased toward over-flagging,
-not under-flagging — this is a safety net layered on top of the model's own
-judgment, not a substitute for it.
+All three checks are intentionally conservative and biased toward
+over-flagging, not under-flagging — this is a safety net layered on top of
+the model's own judgment, not a substitute for it.
 
 ### Security
 

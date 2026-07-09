@@ -15,4 +15,4 @@ def get_forecast(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> ForecastOut:
-    return build_forecast(db, current_user.id)
+    return build_forecast(db, current_user.id, life_stage=current_user.life_stage)
