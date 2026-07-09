@@ -9,7 +9,7 @@ export default function PhoneMockup({
   className?: string;
   size?: "default" | "small";
 }) {
-  const dims = size === "small" ? "w-[220px] h-[449px]" : "w-[300px] h-[612px] sm:w-[320px] sm:h-[653px]";
+  const dims = size === "small" ? "w-[250px] h-[510px]" : "w-[300px] h-[612px] sm:w-[320px] sm:h-[653px]";
 
   return (
     <div className={`relative ${dims} ${className}`}>
