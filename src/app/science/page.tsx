@@ -1,152 +1,198 @@
 import type { Metadata } from "next";
 import Button from "@/components/Button";
-import { Container, Pill, SectionHeading, GlowBlob, Card } from "@/components/ui";
+import { Container, Pill, SectionHeading, GlowBlob, Card, DisclaimerBanner } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Science — CycleAI",
-  description: "The physiology and methodology behind CycleAI — how cycle science and personalized pattern recognition come together, and where the limits of AI guidance are.",
+  title: "AI Science — CycleAI",
+  description: "CycleAI is evidence-informed, privacy-first, and safety-aware — see what it analyzes, how the AI helps, what it deliberately does not do, and the safety framework behind it.",
 };
 
-const phases = [
-  {
-    name: "Menstrual",
-    days: "Days 1–5",
-    color: "rose" as const,
-    desc: "Estrogen and progesterone are at their lowest. Energy often dips; rest and gentle movement tend to feel best.",
-  },
-  {
-    name: "Follicular",
-    days: "Days 1–13",
-    color: "sky" as const,
-    desc: "Estrogen begins rising as follicles mature. Many notice steadily improving energy and mood.",
-  },
-  {
-    name: "Ovulation",
-    days: "~Day 14",
-    color: "peach" as const,
-    desc: "A surge in luteinizing hormone triggers ovulation. Energy and confidence often peak around this window.",
-  },
-  {
-    name: "Luteal",
-    days: "Days 15–28",
-    color: "lavender" as const,
-    desc: "Progesterone rises then falls. Mood, sleep, and appetite shifts are common in the days before your period.",
-  },
+const analyzes = [
+  { icon: "🌙", label: "Cycle phase" },
+  { icon: "📏", label: "Cycle length" },
+  { icon: "🗓️", label: "Period timing" },
+  { icon: "🌸", label: "Symptom logs" },
+  { icon: "💗", label: "Mood" },
+  { icon: "⚡", label: "Energy" },
+  { icon: "😴", label: "Sleep" },
+  { icon: "🧘", label: "Stress" },
+  { icon: "🌿", label: "Lifestyle patterns" },
 ];
 
-const methodology = [
-  {
-    icon: "📊",
-    title: "Personal baselines, not population averages",
-    desc: "CycleAI builds a model of what's normal specifically for you, refining with every log instead of comparing you to a generic 28-day cycle.",
-  },
-  {
-    icon: "🔗",
-    title: "Correlation, clearly labeled",
-    desc: "When CycleAI surfaces a link — like sleep and mood — it's described as an observed pattern in your data, not a proven cause.",
-  },
-  {
-    icon: "🧭",
-    title: "Guidance with guardrails",
-    desc: "The AI is designed to stay in the lane of education and wellness, and to explicitly step back when something looks clinical.",
-  },
-  {
-    icon: "🔁",
-    title: "Continuously reviewed",
-    desc: "Our approach is developed in consultation with OB-GYNs, reproductive health researchers, and behavioral scientists, and evolves as understanding grows.",
-  },
+const howAiHelps = [
+  { icon: "🔍", title: "Detects repeated patterns", desc: "Notices what reliably shows up together in your own logs, cycle after cycle." },
+  { icon: "💡", title: "Explains daily changes", desc: "Turns today's data into a clear, calm explanation of what may be happening." },
+  { icon: "🔮", title: "Predicts likely symptoms", desc: "Forecasts what tends to follow, based on your history, so less catches you off guard." },
+  { icon: "🌱", title: "Creates helpful wellness suggestions", desc: "Offers gentle, personalized next steps you can actually act on." },
 ];
 
-export default function SciencePage() {
+const doesNotDo = [
+  "Does not diagnose",
+  "Does not prescribe medication",
+  "Does not replace medical care",
+  "Does not create fear-based alerts",
+];
+
+const safetyFramework = [
+  { icon: "🗣️", title: "Clear language", desc: "Plain, human explanations — never clinical jargon or vague hedging." },
+  { icon: "📊", title: "Confidence-aware answers", desc: "CycleAI is upfront about how certain a pattern is, instead of overstating it." },
+  { icon: "🩺", title: "Medical escalation guidance", desc: "Recognizes when something is beyond its lane and points you to a professional." },
+  { icon: "🔑", title: "User-controlled data", desc: "You decide what's logged, what's kept, and what's deleted — always." },
+  { icon: "🔒", title: "Privacy-first design", desc: "Encrypted, never sold, built around your consent from the first screen." },
+];
+
+export default function AISciencePage() {
   return (
     <>
       <section className="relative overflow-hidden pt-16 pb-16 sm:pt-20">
-        <GlowBlob className="-left-24 -top-16 h-80 w-80" color="lavender" />
+        <GlowBlob className="-left-24 -top-16 h-80 w-80" color="sky" />
         <GlowBlob className="-right-20 top-32 h-72 w-72" color="mint" />
         <Container className="relative text-center">
-          <Pill tone="mint">📚 Grounded, not gimmicky</Pill>
+          <Pill tone="sky">Science</Pill>
           <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-semibold leading-tight text-plum sm:text-5xl">
-            The science behind CycleAI
+            Built on body patterns, not guesswork.
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-plum-soft">
-            CycleAI is built on well-established reproductive physiology and a
-            methodology that respects the difference between a pattern and a
-            diagnosis.
+            CycleAI combines cycle science, personal trends, and explainable
+            AI to help users understand what may be happening in their body.
           </p>
         </Container>
       </section>
 
+      {/* WHAT CYCLEAI ANALYZES */}
       <section className="pb-24">
         <Container>
           <SectionHeading
-            eyebrow="The cycle, understood"
-            title="Four phases, one continuous story"
-            description="Your cycle isn't just about your period — hormonal shifts across all four phases quietly influence mood, energy, sleep, and more."
+            eyebrow="Signals"
+            title="What CycleAI analyzes"
+            description="Every insight is built from signals you choose to share — nothing more, nothing hidden."
+          />
+          <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-9">
+            {analyzes.map((a) => (
+              <div
+                key={a.label}
+                className="glass-card flex flex-col items-center gap-2 rounded-2xl px-3 py-6 text-center lg:px-2"
+              >
+                <span className="text-xl">{a.icon}</span>
+                <p className="text-xs font-semibold leading-snug text-plum">{a.label}</p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* HOW AI HELPS */}
+      <section className="pb-24">
+        <Container>
+          <SectionHeading
+            eyebrow="Explainable AI"
+            title="How AI helps"
+            description="CycleAI turns raw signals into something you can actually understand and use."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {phases.map((p) => (
-              <Card key={p.name}>
-                <Pill tone={p.color}>{p.days}</Pill>
-                <h3 className="mt-4 font-display text-xl font-semibold text-plum">{p.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-plum-soft">{p.desc}</p>
+            {howAiHelps.map((h) => (
+              <Card key={h.title}>
+                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-sky-light text-xl">
+                  {h.icon}
+                </span>
+                <h3 className="mt-5 font-display text-lg font-semibold text-plum">{h.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-plum-soft">{h.desc}</p>
               </Card>
             ))}
           </div>
-          <p className="mx-auto mt-8 max-w-2xl text-center text-xs text-plum-faint">
-            Phase lengths vary by person and cycle — these ranges are general
-            reference points, not predictions for any individual.
-          </p>
         </Container>
       </section>
 
+      {/* WHAT CYCLEAI DOES NOT DO */}
+      <section className="pb-24">
+        <Container>
+          <div className="mx-auto max-w-3xl rounded-[2.5rem] border border-lavender-100 bg-lavender-50/60 p-10 sm:p-14">
+            <Pill tone="lavender">Boundaries, by design</Pill>
+            <h2 className="mt-5 font-display text-2xl font-semibold text-plum sm:text-3xl">
+              What CycleAI does not do
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-plum-soft">
+              Just as important as what CycleAI can explain is what it
+              deliberately stays away from.
+            </p>
+            <ul className="mt-7 grid gap-4 sm:grid-cols-2">
+              {doesNotDo.map((d) => (
+                <li
+                  key={d}
+                  className="flex items-center gap-3 rounded-2xl bg-white/70 px-5 py-4 text-sm font-medium text-plum"
+                >
+                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-lavender-100 text-xs text-lavender-600">
+                    ✕
+                  </span>
+                  {d}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Container>
+      </section>
+
+      {/* SAFETY FRAMEWORK */}
       <section className="pb-24">
         <Container>
           <SectionHeading
-            eyebrow="Methodology"
-            title="How CycleAI actually reasons about your body"
-            description="Every insight follows the same careful process — from raw logs to language you can trust."
+            eyebrow="Safety framework"
+            title="Built to be trustworthy, not just clever"
+            description="Five commitments that shape every response CycleAI gives."
           />
-          <div className="mt-14 grid gap-6 sm:grid-cols-2">
-            {methodology.map((m) => (
-              <Card key={m.title} className="flex gap-5">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-lavender-50 text-xl">
-                  {m.icon}
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            {safetyFramework.map((s) => (
+              <Card key={s.title}>
+                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-mint-light text-xl">
+                  {s.icon}
                 </span>
-                <div>
-                  <h3 className="font-display text-lg font-semibold text-plum">{m.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-plum-soft">{m.desc}</p>
-                </div>
+                <h3 className="mt-5 font-display text-base font-semibold text-plum">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-plum-soft">{s.desc}</p>
               </Card>
             ))}
           </div>
         </Container>
       </section>
 
+      {/* DOCTOR-FRIENDLY REPORTS */}
       <section className="pb-24">
         <Container>
-          <div className="rounded-[2.5rem] border border-rose-light bg-blush p-10 sm:p-14">
-            <Pill tone="rose">🩺 Medical disclaimer</Pill>
-            <h2 className="mt-5 font-display text-2xl font-semibold text-plum sm:text-3xl">
-              CycleAI is educational — not a medical device
-            </h2>
-            <div className="mt-5 space-y-4 text-sm leading-relaxed text-plum-soft">
-              <p>
-                CycleAI does not diagnose, treat, cure, or prevent any disease
-                or medical condition, and it is not a substitute for
-                professional medical advice, diagnosis, or treatment.
+          <div className="glass-card grid gap-10 rounded-[2.5rem] p-10 sm:p-14 lg:grid-cols-[1fr_1fr] lg:items-center">
+            <div>
+              <Pill tone="sky">📄 Coming to a future version</Pill>
+              <h2 className="mt-5 font-display text-2xl font-semibold leading-tight text-plum sm:text-3xl">
+                Doctor-friendly reports
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-plum-soft sm:text-base">
+                CycleAI is designed so your patterns don&apos;t stay locked in an
+                app. In future versions, you&apos;ll be able to generate a clear,
+                shareable summary of your cycle, symptoms, sleep, and stress
+                trends — built to make your next appointment easier, not to
+                replace it.
               </p>
-              <p>
-                Insights are generated from patterns in your self-reported
-                data and general reproductive health education. They are
-                intended to support your own understanding and conversations
-                with your healthcare provider — not to replace them.
+              <p className="mt-4 text-sm leading-relaxed text-plum-soft">
+                You&apos;ll always choose what&apos;s included before anything is
+                shared, and a report is a conversation starter for your
+                healthcare provider — never a diagnosis on its own.
               </p>
-              <p className="font-semibold text-plum">
-                If you experience symptoms that are severe, persistent, or
-                unusual — including significant pain, irregular bleeding, or
-                any symptom that concerns you — please contact a licensed
-                healthcare professional promptly.
+            </div>
+            <div className="rounded-[1.75rem] bg-sky-light/60 p-6 sm:p-8">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[#256486]">
+                Sample summary preview
               </p>
+              <div className="mt-4 space-y-3">
+                {[
+                  { label: "Average cycle length", value: "28.4 days" },
+                  { label: "Symptom-free days", value: "21 / cycle" },
+                  { label: "Sleep average", value: "7.1 hrs / night" },
+                  { label: "Notable pattern", value: "Lower pain after 7+ hrs sleep" },
+                ].map((row) => (
+                  <div key={row.label} className="flex items-center justify-between rounded-xl bg-white/80 px-4 py-3">
+                    <span className="text-xs text-plum-faint">{row.label}</span>
+                    <span className="text-sm font-semibold text-plum">{row.value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </Container>
@@ -154,7 +200,7 @@ export default function SciencePage() {
 
       <section className="pb-24">
         <Container className="text-center">
-          <div className="rounded-[2.5rem] bg-gradient-to-r from-lavender-50 via-blush to-peach-light p-10 sm:p-14">
+          <div className="rounded-[2.5rem] bg-gradient-to-r from-sky-light via-lavender-50 to-mint-light p-10 sm:p-14">
             <h2 className="mx-auto max-w-xl font-display text-3xl font-semibold text-plum sm:text-4xl">
               Curious how this feels day to day?
             </h2>
@@ -163,6 +209,7 @@ export default function SciencePage() {
               <Button href="/how-it-works" variant="secondary" size="lg">See how it works</Button>
             </div>
           </div>
+          <DisclaimerBanner className="mt-10 text-left" />
         </Container>
       </section>
     </>
