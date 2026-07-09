@@ -1,16 +1,21 @@
 import Link from "next/link";
-import { navLinks } from "@/lib/nav";
 
 const columns = [
   {
     title: "Product",
-    links: navLinks.filter((l) => l.href !== "/"),
+    links: [
+      { href: "/features", label: "Features" },
+      { href: "/how-it-works", label: "How It Works" },
+      { href: "/ai-demo", label: "AI Demo" },
+      { href: "/app", label: "Mobile App" },
+      { href: "/pricing", label: "Pricing" },
+    ],
   },
   {
     title: "Company",
     links: [
-      { href: "/about", label: "About" },
-      { href: "/science", label: "Science" },
+      { href: "/about", label: "About Us" },
+      { href: "/science", label: "AI Science" },
       { href: "/blog", label: "Blog" },
       { href: "/join-beta", label: "Join Beta" },
     ],
@@ -20,7 +25,7 @@ const columns = [
     links: [
       { href: "/privacy", label: "Privacy Promise" },
       { href: "/science", label: "Medical Disclaimer" },
-      { href: "/pricing", label: "Pricing" },
+      { href: "/login", label: "Log in" },
     ],
   },
 ];

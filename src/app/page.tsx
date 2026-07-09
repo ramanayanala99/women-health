@@ -1,16 +1,35 @@
 import Button from "@/components/Button";
 import PhoneMockup from "@/components/PhoneMockup";
-import TodayScreen from "@/components/screens/TodayScreen";
+import BodyScoreScreen from "@/components/screens/BodyScoreScreen";
 import AIChatScreen from "@/components/screens/AIChatScreen";
+import StackedDemoCards from "@/components/StackedDemoCards";
+import WatchDemoButton from "@/components/WatchDemoButton";
 import { Container, Pill, SectionHeading, GlowBlob, Card, DisclaimerBanner } from "@/components/ui";
 
-const pillars = [
-  { icon: "🌙", label: "Cycle", tone: "lavender" as const },
-  { icon: "💗", label: "Mood", tone: "rose" as const },
-  { icon: "⚡", label: "Energy", tone: "peach" as const },
-  { icon: "🌸", label: "Symptoms", tone: "rose" as const },
-  { icon: "😴", label: "Sleep", tone: "sky" as const },
-  { icon: "🧘", label: "Stress", tone: "mint" as const },
+const benefits = [
+  {
+    icon: "🧠",
+    title: "Real AI. Real results.",
+    desc: "Evidence-informed AI that helps explain why you may feel different.",
+  },
+  {
+    icon: "🔒",
+    title: "Privacy by design.",
+    desc: "Your data is private, secure, and always in your control.",
+  },
+  {
+    icon: "🌱",
+    title: "Learns and improves with you.",
+    desc: "The more you use CycleAI, the more personalized it becomes.",
+  },
+];
+
+const trustStrip = [
+  { icon: "🔬", label: "Evidence-informed" },
+  { icon: "🎯", label: "Personalized for you" },
+  { icon: "🤝", label: "AI you can trust" },
+  { icon: "🌿", label: "Designed for real life" },
+  { icon: "🔒", label: "Privacy first" },
 ];
 
 const steps = [
@@ -53,54 +72,73 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden pt-16 pb-24 sm:pt-20">
+      <section className="relative overflow-hidden pt-16 pb-20 sm:pt-20">
         <GlowBlob className="-left-32 -top-20 h-96 w-96" color="lavender" />
         <GlowBlob className="-right-24 top-40 h-80 w-80" color="rose" />
         <GlowBlob className="left-1/3 bottom-0 h-72 w-72" color="peach" />
 
-        <Container className="relative grid items-center gap-16 lg:grid-cols-2">
+        <Container className="relative grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] xl:grid-cols-[1fr_0.95fr_0.85fr]">
           <div>
-            <Pill tone="lavender">✦ AI Women&apos;s Health Operating System</Pill>
-            <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.1] text-plum sm:text-5xl lg:text-[3.4rem]">
-              Understand your body
-              <br />
-              <span className="gradient-text">before it changes.</span>
+            <Pill tone="lavender">✦ AI Health</Pill>
+            <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.1] text-plum sm:text-5xl">
+              Experience CycleAI in{" "}
+              <span className="gradient-text">action.</span>
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-plum-soft">
-              CycleAI learns your cycle, mood, energy, symptoms, sleep, and stress —
-              turning quiet daily signals into calm, personal guidance. Not a hospital
-              app. Not a diagnosis. Just your body, understood.
+              See how our AI understands your body, learns your patterns, and
+              gives you personal insights that actually help.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-4">
-              <Button href="/join-beta" size="lg">
-                Join the Beta →
-              </Button>
-              <Button href="/how-it-works" variant="secondary" size="lg">
-                See how it works
-              </Button>
-            </div>
-            <div className="mt-10 flex flex-wrap gap-3">
-              {pillars.map((p) => (
-                <Pill key={p.label} tone={p.tone}>
-                  {p.icon} {p.label}
-                </Pill>
+
+            <div className="mt-9 space-y-5">
+              {benefits.map((b) => (
+                <div key={b.title} className="flex gap-3.5">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blush text-base">
+                    {b.icon}
+                  </span>
+                  <div>
+                    <p className="font-display text-base font-semibold text-plum">{b.title}</p>
+                    <p className="mt-0.5 text-sm leading-relaxed text-plum-soft">{b.desc}</p>
+                  </div>
+                </div>
               ))}
             </div>
-            <p className="mt-8 text-xs text-plum-faint">
-              🔒 Private by design · Your health data is never sold · Educational
-              guidance, not a medical diagnosis
-            </p>
+
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Button href="/ai-demo" size="lg">
+                Try CycleAI Demo →
+              </Button>
+              <WatchDemoButton />
+            </div>
           </div>
 
-          <div className="relative mx-auto flex justify-center lg:justify-end">
-            <div className="absolute -right-2 top-16 hidden rotate-6 sm:block">
-              <PhoneMockup size="small" className="scale-90 opacity-90">
-                <AIChatScreen />
-              </PhoneMockup>
-            </div>
-            <PhoneMockup>
-              <TodayScreen />
+          <div className="relative mx-auto flex justify-center">
+            <PhoneMockup size="large" className="rotate-3">
+              <BodyScoreScreen />
             </PhoneMockup>
+          </div>
+
+          <div className="sm:col-span-2 xl:col-span-1">
+            <StackedDemoCards />
+          </div>
+        </Container>
+      </section>
+
+      {/* TRUST STRIP */}
+      <section className="pb-20">
+        <Container>
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-plum-faint">
+            Built with privacy-first, evidence-informed wellness principles
+          </p>
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {trustStrip.map((t) => (
+              <div
+                key={t.label}
+                className="glass-card flex flex-col items-center gap-2 rounded-2xl px-4 py-6 text-center"
+              >
+                <span className="text-xl">{t.icon}</span>
+                <p className="text-xs font-semibold text-plum">{t.label}</p>
+              </div>
+            ))}
           </div>
         </Container>
       </section>
