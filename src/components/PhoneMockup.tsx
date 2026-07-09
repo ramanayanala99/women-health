@@ -7,9 +7,14 @@ export default function PhoneMockup({
 }: {
   children: ReactNode;
   className?: string;
-  size?: "default" | "small";
+  size?: "default" | "small" | "large";
 }) {
-  const dims = size === "small" ? "w-[250px] h-[510px]" : "w-[300px] h-[612px] sm:w-[320px] sm:h-[653px]";
+  const dims =
+    size === "small"
+      ? "w-[250px] h-[510px]"
+      : size === "large"
+        ? "w-[320px] h-[653px] sm:w-[350px] sm:h-[714px] lg:w-[370px] lg:h-[755px]"
+        : "w-[300px] h-[612px] sm:w-[320px] sm:h-[653px]";
 
   return (
     <div className={`relative ${dims} ${className}`}>
@@ -30,10 +35,10 @@ export default function PhoneMockup({
         }}
       >
         {/* buttons */}
-        <div className="absolute -left-[3px] top-[108px] h-6 w-[3px] rounded-l-sm bg-[#c98697]" />
-        <div className="absolute -left-[3px] top-[150px] h-10 w-[3px] rounded-l-sm bg-[#c98697]" />
-        <div className="absolute -left-[3px] top-[196px] h-10 w-[3px] rounded-l-sm bg-[#c98697]" />
-        <div className="absolute -right-[3px] top-[160px] h-16 w-[3px] rounded-r-sm bg-[#c98697]" />
+        <div className="absolute -left-[3px] h-6 w-[3px] rounded-l-sm bg-[#c98697]" style={{ top: "16.5%" }} />
+        <div className="absolute -left-[3px] h-10 w-[3px] rounded-l-sm bg-[#c98697]" style={{ top: "23%" }} />
+        <div className="absolute -left-[3px] h-10 w-[3px] rounded-l-sm bg-[#c98697]" style={{ top: "30%" }} />
+        <div className="absolute -right-[3px] h-16 w-[3px] rounded-r-sm bg-[#c98697]" style={{ top: "24.5%" }} />
 
         {/* inner bezel (black) */}
         <div className="relative h-full w-full rounded-[2.9rem] bg-[#0d0a11] p-[9px]">
@@ -42,7 +47,7 @@ export default function PhoneMockup({
             {children}
 
             {/* Dynamic Island */}
-            <div className="absolute left-1/2 top-[14px] z-30 h-[26px] w-[92px] -translate-x-1/2 rounded-full bg-black" />
+            <div className="absolute left-1/2 z-30 h-[26px] w-[92px] -translate-x-1/2 rounded-full bg-black" style={{ top: "2.1%" }} />
 
             {/* glass reflection */}
             <div

@@ -38,7 +38,15 @@ export default function Navbar() {
           })}
         </div>
 
-        <div className="hidden xl:block">
+        <div className="hidden items-center gap-5 xl:flex">
+          <Link
+            href="/login"
+            className={`text-sm font-medium transition-colors ${
+              pathname === "/login" ? "text-rose-deep" : "text-plum-soft hover:text-plum"
+            }`}
+          >
+            Log in
+          </Link>
           <Button href="/join-beta" size="sm">
             Join Beta
           </Button>
@@ -72,6 +80,15 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className={`rounded-xl px-3 py-2.5 text-sm font-medium ${
+                pathname === "/login" ? "bg-blush text-rose-deep" : "text-plum-soft hover:bg-blush/60"
+              }`}
+            >
+              Log in
+            </Link>
             <Button href="/join-beta" className="mt-2 w-full">
               Join Beta
             </Button>
