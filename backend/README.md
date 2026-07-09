@@ -65,23 +65,44 @@ specific calculation, which matters a lot for a health product.
 5. **AI Coach** (`ai_coach.py`) — wraps the OpenAI Chat Completions API with a
    safety-first system prompt and the user's own context. If no
    `OPENAI_API_KEY` is configured, it falls back to a deterministic templated
-   reply so the endpoint is always usable in dev/CI.
+   reply — grounded in the same context and real Recommendation Engine
+   output — so the endpoint is always usable, and still genuinely helpful,
+   without a live model.
 
 ### AI safety (`app/services/safety.py`)
 
-One shared module of safety copy and rules used everywhere the AI surfaces
-content:
+CycleAI is not a doctor. It does not diagnose, does not prescribe, and does
+not replace professional medical care. It may explain general health and
+cycle-related patterns, give wellness education, and suggest hydration,
+rest, gentle movement, nutrition, sleep, and stress reduction. One shared
+module of safety copy and rules enforces this everywhere the AI surfaces
+content (dashboard, AI Coach, insights, reports):
 
 - Never diagnoses a condition or names a disease.
 - Never prescribes medication or dosages.
 - Never makes emergency medical claims.
 - Always explains uncertainty (confidence scores, sample sizes, "estimate not
   a guarantee" language).
-- A conservative keyword-based severity check (`detect_severity_flag`) adds a
-  "please see a healthcare professional" notice on top of the model's own
-  judgment whenever a message mentions things like severe pain, heavy
-  bleeding, or chest pain — biased toward over-flagging, not under-flagging.
-- Warm, supportive, non-judgmental tone, enforced via the system prompt.
+- Calm, supportive, clear, non-scary tone — enforced via the system prompt,
+  even in the escalation notice itself.
+
+Escalation to "please see a healthcare professional" is checked two
+independent ways, and either one is enough to trigger it:
+
+1. **Message-based** (`detect_severity_flag`) — phrase matching for severe
+   pain, very heavy bleeding, language suggesting a symptom is unusual or
+   persistent for that user, sudden worsening, fear/danger/emergency
+   language, and pregnancy mentioned alongside a concerning symptom.
+2. **Data-based** (`has_persistent_or_worsening_pattern`) — looks at the
+   user's own last 5 days of logs, independent of what they just typed, and
+   flags high pain or a repeated symptom recurring across most of those
+   days, or today's pain level jumping well above their own recent
+   baseline. This is what catches "persistent" and "suddenly worse" even
+   when the current message doesn't mention it at all.
+
+Both checks are intentionally conservative and biased toward over-flagging,
+not under-flagging — this is a safety net layered on top of the model's own
+judgment, not a substitute for it.
 
 ### Security
 

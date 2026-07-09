@@ -20,7 +20,13 @@ from app.models.ai_conversation import AIConversation
 from app.models.symptom import Symptom
 from app.models.user import User
 from app.services.cycle_prediction import build_forecast
-from app.services.safety import AI_COACH_SYSTEM_PROMPT, ESCALATION_NOTICE, detect_severity_flag
+from app.services.recommendation import generate_recommendations
+from app.services.safety import (
+    AI_COACH_SYSTEM_PROMPT,
+    ESCALATION_NOTICE,
+    detect_severity_flag,
+    has_persistent_or_worsening_pattern,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -66,16 +72,28 @@ def _build_context_summary(db: Session, user_id: str) -> str:
     return "\n".join(lines)
 
 
-def _offline_template_reply(message: str, context_summary: str) -> str:
-    """A safe, honest fallback used when no OPENAI_API_KEY is configured."""
+def _offline_template_reply(db: Session, user_id: str, message: str, context_summary: str) -> str:
+    """A safe, honest fallback used when no OPENAI_API_KEY is configured.
+
+    Still genuinely useful rather than just an apology: it grounds the reply
+    in the user's real context and offers real wellness suggestions from the
+    Recommendation Engine, so the "what CycleAI may do" list (explain
+    patterns, give wellness education, suggest hydration/rest/movement/
+    nutrition/sleep/stress reduction) holds even without a live model.
+    """
+    forecast = build_forecast(db, user_id)
+    recommendations = generate_recommendations(db, user_id, forecast)
+    suggestion_lines = "\n".join(f"- {rec.title}: {rec.description}" for rec in recommendations[:2])
+
     return (
         "Here's what I can see in your patterns:\n\n"
         f"{context_summary}\n\n"
-        f"On \"{message.strip()}\" — I'd normally reason about this together with an AI model, "
-        "but I'm currently running in offline demo mode (no OpenAI API key configured). "
-        "In live mode, I'd give you a specific, cycle-aware explanation grounded in the context "
-        "above. Either way: this is general educational guidance, not a diagnosis — if something "
-        "feels severe, persistent, or unusual, please talk to a healthcare professional."
+        f"On \"{message.strip()}\" — I'm currently running in offline demo mode (no OpenAI API key "
+        "configured), so I can't reason about your specific question the way I would live. Based "
+        "on your recent data, though, here's some general wellness guidance that may help:\n\n"
+        f"{suggestion_lines}\n\n"
+        "This is general educational guidance, not a diagnosis — if something feels severe, "
+        "persistent, or unusual for you, please talk to a healthcare professional."
     )
 
 
@@ -105,7 +123,12 @@ def _call_openai(
 def chat(db: Session, user: User, message: str, session_id: str | None) -> tuple[str, bool, str]:
     session_id = session_id or str(uuid.uuid4())
     context_summary = _build_context_summary(db, user.id)
-    escalation_flagged = detect_severity_flag(message)
+
+    # Two independent signals: what the user just typed, and what their recent
+    # logs show. Either one is enough — see services.safety for why.
+    escalation_flagged = detect_severity_flag(message) or has_persistent_or_worsening_pattern(
+        db, user.id
+    )
 
     history_rows = (
         db.query(AIConversation)
@@ -119,7 +142,7 @@ def chat(db: Session, user: User, message: str, session_id: str | None) -> tuple
     system_prompt = f"{AI_COACH_SYSTEM_PROMPT}\n\nUser context:\n{context_summary}"
     reply = _call_openai(system_prompt, history, message)
     if reply is None:
-        reply = _offline_template_reply(message, context_summary)
+        reply = _offline_template_reply(db, user.id, message, context_summary)
 
     if escalation_flagged and ESCALATION_NOTICE not in reply:
         reply = f"{reply}\n\n{ESCALATION_NOTICE}"
