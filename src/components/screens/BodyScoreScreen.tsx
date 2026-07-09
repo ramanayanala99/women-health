@@ -1,4 +1,5 @@
 import StatusBar from "./StatusBar";
+import BottomTabBar from "./BottomTabBar";
 
 const stats = [
   { icon: "⚡", label: "Energy", value: "High" },
@@ -7,12 +8,10 @@ const stats = [
   { icon: "🧘", label: "Stress", value: "Low" },
 ];
 
-const tabs = [
-  { label: "Today", icon: TodayIcon, active: true },
-  { label: "Timeline", icon: TimelineIcon, active: false },
-  { label: "Coach", icon: CoachIcon, active: false },
-  { label: "Insights", icon: InsightsIcon, active: false },
-  { label: "You", icon: YouIcon, active: false },
+const recommendations = [
+  { icon: "💧", label: "Hydrate" },
+  { icon: "🚶", label: "Gentle walk" },
+  { icon: "😴", label: "Wind down early" },
 ];
 
 export default function BodyScoreScreen() {
@@ -78,68 +77,31 @@ export default function BodyScoreScreen() {
         ))}
       </div>
 
-      <div className="flex-1" />
-
-      {/* bottom tab bar */}
-      <div className="mx-3 mb-3 flex items-center justify-between rounded-[22px] bg-white/90 px-3 py-2.5 shadow-[0_8px_24px_-10px_rgba(169,136,221,0.4)] backdrop-blur">
-        {tabs.map((t) => (
-          <div key={t.label} className="flex flex-col items-center gap-1 px-1">
-            <t.icon active={t.active} />
-            <span className={`text-[8.5px] font-medium ${t.active ? "text-rose-deep" : "text-plum-faint"}`}>
-              {t.label}
-            </span>
-          </div>
-        ))}
+      <div className="mx-4 mt-3 rounded-[22px] p-4" style={{ background: "var(--gradient-primary)" }}>
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-white/80">
+          CycleAI Insight
+        </p>
+        <p className="mt-1.5 text-[12px] leading-snug text-white">
+          Your sleep has been shorter this week — expect a small energy dip.
+          Tonight&apos;s a good night for an earlier bedtime.
+        </p>
       </div>
+
+      <div className="mx-4 mt-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-plum-faint">
+          Today&apos;s recommendations
+        </p>
+        <div className="mt-2 flex gap-2">
+          {recommendations.map((r) => (
+            <div key={r.label} className="flex flex-1 flex-col items-center gap-1 rounded-2xl bg-white/75 py-2.5 shadow-sm">
+              <span className="text-sm">{r.icon}</span>
+              <span className="text-center text-[8.5px] font-medium leading-tight text-plum-soft">{r.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <BottomTabBar active="today" />
     </div>
-  );
-}
-
-function iconColor(active: boolean) {
-  return active ? "#e2607e" : "#8a7c9e";
-}
-
-function TodayIcon({ active }: { active: boolean }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <circle cx="9" cy="9" r="4.5" stroke={iconColor(active)} strokeWidth="1.4" />
-      <path d="M9 1.5V3M9 15v1.5M16.5 9H15M3 9H1.5M14.2 3.8l-1 1M4.8 13.2l-1 1M14.2 14.2l-1-1M4.8 4.8l-1-1" stroke={iconColor(active)} strokeWidth="1.2" strokeLinecap="round" />
-    </svg>
-  );
-}
-function TimelineIcon({ active }: { active: boolean }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <rect x="2" y="3" width="14" height="13" rx="2.5" stroke={iconColor(active)} strokeWidth="1.4" />
-      <path d="M2 7H16" stroke={iconColor(active)} strokeWidth="1.4" />
-      <path d="M6 1.5V4M12 1.5V4" stroke={iconColor(active)} strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
-}
-function CoachIcon({ active }: { active: boolean }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path
-        d="M2 8.4C2 5 4.8 2.5 8.5 2.5S15 5 15 8.4c0 3.4-2.8 5.9-6.5 5.9-.7 0-1.4-.1-2-.3L3 15.5l1-3.1C2.6 11.2 2 9.9 2 8.4Z"
-        stroke={iconColor(active)}
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-function InsightsIcon({ active }: { active: boolean }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path d="M3 15V9M9 15V3M15 15v-6" stroke={iconColor(active)} strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-function YouIcon({ active }: { active: boolean }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <circle cx="9" cy="5.8" r="3" stroke={iconColor(active)} strokeWidth="1.4" />
-      <path d="M2.8 15.5c.9-3 3.2-4.6 6.2-4.6s5.3 1.6 6.2 4.6" stroke={iconColor(active)} strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
   );
 }

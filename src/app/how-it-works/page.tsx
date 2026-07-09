@@ -106,7 +106,7 @@ export default function HowItWorksPage() {
               }`}
             >
               <div className="flex justify-center">
-                <PhoneMockup size="small">{j.screen}</PhoneMockup>
+                <PhoneMockup>{j.screen}</PhoneMockup>
               </div>
               <div>
                 <span className="font-display text-6xl font-semibold text-lavender-100">
