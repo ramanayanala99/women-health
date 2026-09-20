@@ -1,0 +1,24 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "JWT_SECRET_KEY",
+      "description": "Secret used to sign JWT auth tokens. Auto-generated for development; replace with your own for production.",
+      "requiredAtBoot": false,
+      "generatedForDevelopment": true
+    },
+    {
+      "name": "APP_ENCRYPTION_KEY",
+      "description": "Fernet key for field-level encryption of sensitive health data. Auto-generated for development; replace with your own for production.",
+      "requiredAtBoot": false,
+      "generatedForDevelopment": true
+    },
+    {
+      "name": "OPENAI_API_KEY",
+      "description": "OpenAI API key for the AI Coach feature. Optional — if unset, the coach falls back to a deterministic template responder. Get it from https://platform.openai.com/api-keys.",
+      "requiredAtBoot": false
+    }
+  ]
+}

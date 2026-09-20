@@ -1,0 +1,76 @@
+# Base44 development compose — runs the app from cloned source with live reload.
+# Frontend (Next.js) on port 3000, backend (FastAPI) on port 8000 (separate origins).
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cycleai
+      POSTGRES_PASSWORD: cycleai
+      POSTGRES_DB: cycleai
+    volumes:
+      - cycleai_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cycleai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: python:3.11-slim
+    working_dir: /app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    environment:
+      DATABASE_URL: postgresql+psycopg2://cycleai:cycleai@db:5432/cycleai
+      REDIS_URL: redis://redis:6379/0
+      OPENAI_MODEL: gpt-4o-mini
+      CORS_ORIGINS: https://3000-${BASE44_PUBLIC_HOST_SUFFIX},http://localhost:3000
+      ENVIRONMENT: development
+      # JWT_SECRET_KEY and APP_ENCRYPTION_KEY come from the platform-managed env file below.
+    env_file:
+      - /run/base44/app.env
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt
+      && alembic upgrade head
+      && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - "8000:8000"
+
+  web:
+    image: node:22
+    working_dir: /app
+    restart: unless-stopped
+    depends_on:
+      - api
+    volumes:
+      - ./:/app
+      - web_node_modules:/app/node_modules
+    environment:
+      NEXT_PUBLIC_API_URL: https://8000-${BASE44_PUBLIC_HOST_SUFFIX}
+      BASE44_PUBLIC_HOST_SUFFIX: ${BASE44_PUBLIC_HOST_SUFFIX}
+      # Watch polling helps with bind-mounted filesystems.
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    command: sh -c "npm install && npm run dev -- -H 0.0.0.0 -p 3000"
+    ports:
+      - "3000:3000"
+
+volumes:
+  cycleai_pg_data:
+  web_node_modules:
