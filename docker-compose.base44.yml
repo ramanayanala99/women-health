@@ -1,0 +1,81 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_USER: cycleai
+      POSTGRES_PASSWORD: cycleai
+      POSTGRES_DB: cycleai
+    volumes:
+      - cycleai_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cycleai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: python:3.11-slim
+    restart: on-failure
+    working_dir: /srv
+    volumes:
+      - ./backend:/srv
+    command: >
+      sh -ec "pip install --no-cache-dir -r requirements.txt
+      && alembic upgrade head
+      && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://cycleai:cycleai@db:5432/cycleai
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+      # Preview origin of the web service (never hardcode the resolved host)
+      CORS_ORIGINS: http://localhost:3000,https://3000-${BASE44_PUBLIC_HOST_SUFFIX}
+    env_file:
+      - /run/base44/app.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys\ntry:\n urllib.request.urlopen('http://localhost:8000/health', timeout=3)\nexcept Exception:\n sys.exit(1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+  web:
+    image: node:22
+    restart: on-failure
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -ec "CI=true npm ci --no-audit --no-fund && exec npx next dev -H 0.0.0.0 -p 3000"
+    environment:
+      - NEXT_TELEMETRY_DISABLED=1
+      - NEXT_PUBLIC_API_URL=https://8000-${BASE44_PUBLIC_HOST_SUFFIX}
+      - BASE44_PUBLIC_HOST_SUFFIX=${BASE44_PUBLIC_HOST_SUFFIX}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3000/',r=>process.exit(r.statusCode<500?0:1)).on('error',()=>process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 90s
+
+volumes:
+  cycleai_pg_data:

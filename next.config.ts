@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Allow the Base44 preview host (rotates per sandbox, so derive from env)
+  ...(process.env.BASE44_PUBLIC_HOST_SUFFIX
+    ? { allowedDevOrigins: [`3000-${process.env.BASE44_PUBLIC_HOST_SUFFIX}`] }
+    : {}),
 };
 
 export default nextConfig;

@@ -1,0 +1,22 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "JWT_SECRET_KEY",
+      "description": "JWT signing key for the FastAPI backend (backend/app/core/config.py)",
+      "requiredAtBoot": true
+    },
+    {
+      "name": "APP_ENCRYPTION_KEY",
+      "description": "Fernet key for field-level encryption of health notes/chat (backend/app/core/encryption.py)",
+      "requiredAtBoot": true
+    },
+    {
+      "name": "OPENAI_API_KEY",
+      "description": "Optional: OpenAI key for the AI Coach; falls back to template responder if unset",
+      "requiredAtBoot": false
+    }
+  ]
+}
