@@ -97,6 +97,23 @@ function classroom({ failProgress = false, nativeMicrophone = false, denyMicroph
   return { dom, requests, errors, microphones, microphoneEvents, speechEvents };
 }
 
+test('classroom navigation omits California and England shortcuts while retaining voice classes', async () => {
+  const { dom, errors } = classroom();
+  try {
+    await waitFor(() => dom.window.document.querySelector('.platform-controls'));
+    const navigation = dom.window.document.querySelector('.app-nav');
+    assert.deepEqual(errors, []);
+    assert.equal(navigation.querySelector('#california-8Nav'), null);
+    assert.equal(navigation.querySelector('#england-ks3Nav'), null);
+    assert.doesNotMatch(navigation.textContent, /California Grade 8|England Key Stage 3/);
+    for (const buttonId of ['indiaMathsNav', 'grade7ClassNav', 'grade8ClassNav', 'visualLabNav']) {
+      assert.ok(navigation.querySelector(`#${buttonId}`));
+    }
+  } finally {
+    dom.window.close();
+  }
+});
+
 test('saved learning loads before lessons; the full classroom connects to same-origin AI', async () => {
   const { dom, requests, errors } = classroom();
   try {
