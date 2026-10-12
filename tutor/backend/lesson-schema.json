@@ -1,0 +1,539 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "goal": {
+      "type": "string"
+    },
+    "hook": {
+      "type": "string"
+    },
+    "idea": {
+      "type": "string"
+    },
+    "simple": {
+      "type": "string"
+    },
+    "prerequisite": {
+      "type": "string"
+    },
+    "visual": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "shape": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ]
+            },
+            "minItems": 0,
+            "maxItems": 12
+          }
+        },
+        "required": [
+          "shape",
+          "labels"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 3
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "board": {
+            "type": "string"
+          },
+          "voice": {
+            "type": "string"
+          },
+          "visual": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "shape": {
+                  "type": "string"
+                },
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "value"
+                    ]
+                  },
+                  "minItems": 0,
+                  "maxItems": 12
+                }
+              },
+              "required": [
+                "shape",
+                "labels"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3
+          }
+        },
+        "required": [
+          "board",
+          "voice",
+          "visual"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 5
+    },
+    "guided": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "q": {
+            "type": "string"
+          },
+          "a": {
+            "type": "number"
+          },
+          "h": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "check_expression": {
+            "type": "string"
+          },
+          "visual": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "shape": {
+                  "type": "string"
+                },
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "value"
+                    ]
+                  },
+                  "minItems": 0,
+                  "maxItems": 12
+                }
+              },
+              "required": [
+                "shape",
+                "labels"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "round_to": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 6
+          }
+        },
+        "required": [
+          "q",
+          "a",
+          "h",
+          "why",
+          "check_expression",
+          "visual",
+          "round_to"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "practice": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "q": {
+            "type": "string"
+          },
+          "a": {
+            "type": "number"
+          },
+          "h": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "check_expression": {
+            "type": "string"
+          },
+          "visual": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "shape": {
+                  "type": "string"
+                },
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "value"
+                    ]
+                  },
+                  "minItems": 0,
+                  "maxItems": 12
+                }
+              },
+              "required": [
+                "shape",
+                "labels"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "round_to": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 6
+          }
+        },
+        "required": [
+          "q",
+          "a",
+          "h",
+          "why",
+          "check_expression",
+          "visual",
+          "round_to"
+        ]
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "q": {
+          "type": "string"
+        },
+        "a": {
+          "type": "number"
+        },
+        "h": {
+          "type": "string"
+        },
+        "why": {
+          "type": "string"
+        },
+        "check_expression": {
+          "type": "string"
+        },
+        "visual": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "shape": {
+                "type": "string"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "value"
+                  ]
+                },
+                "minItems": 0,
+                "maxItems": 12
+              }
+            },
+            "required": [
+              "shape",
+              "labels"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "round_to": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 6
+        }
+      },
+      "required": [
+        "q",
+        "a",
+        "h",
+        "why",
+        "check_expression",
+        "visual",
+        "round_to"
+      ]
+    },
+    "mastery": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "q": {
+            "type": "string"
+          },
+          "a": {
+            "type": "number"
+          },
+          "h": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "check_expression": {
+            "type": "string"
+          },
+          "visual": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "shape": {
+                  "type": "string"
+                },
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "value"
+                    ]
+                  },
+                  "minItems": 0,
+                  "maxItems": 12
+                }
+              },
+              "required": [
+                "shape",
+                "labels"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "round_to": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 6
+          }
+        },
+        "required": [
+          "q",
+          "a",
+          "h",
+          "why",
+          "check_expression",
+          "visual",
+          "round_to"
+        ]
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "challenge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "q": {
+          "type": "string"
+        },
+        "a": {
+          "type": "number"
+        },
+        "h": {
+          "type": "string"
+        },
+        "why": {
+          "type": "string"
+        },
+        "check_expression": {
+          "type": "string"
+        },
+        "visual": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "shape": {
+                "type": "string"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "value"
+                  ]
+                },
+                "minItems": 0,
+                "maxItems": 12
+              }
+            },
+            "required": [
+              "shape",
+              "labels"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "round_to": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 6
+        }
+      },
+      "required": [
+        "q",
+        "a",
+        "h",
+        "why",
+        "check_expression",
+        "visual",
+        "round_to"
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "goal",
+    "hook",
+    "idea",
+    "simple",
+    "prerequisite",
+    "visual",
+    "steps",
+    "guided",
+    "practice",
+    "application",
+    "mastery",
+    "challenge"
+  ]
+}

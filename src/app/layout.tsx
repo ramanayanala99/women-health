@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { AuthProvider } from "@/lib/auth-context";
+import "./maths.css";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -19,9 +17,10 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "CycleAI — Understand your body before it changes",
+  title: "MathsMadeEasyAI — Your personal maths classroom",
   description:
-    "CycleAI is a premium, privacy-first AI Women's Health Operating System — helping you understand your cycle, mood, energy, symptoms, sleep, and stress patterns. Educational wellness guidance, not a diagnosis.",
+    "Learn maths at your own pace with guided lessons, a teaching board, practice questions, and one-to-one AI conversation.",
+  icons: { icon: "/tutor/icon.svg" },
 };
 
 export default function RootLayout({
@@ -34,13 +33,7 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${manrope.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-pearl text-plum">
-        <AuthProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </AuthProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

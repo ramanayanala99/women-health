@@ -1,0 +1,36 @@
+:root { font-family: "Trebuchet MS", sans-serif; color: #203b35; background: #f7f5ed; }
+header { background: #f7f5ed; border-bottom: 1px solid #d9ddd2; }
+header .brand { color: #203b35; }
+header .logo { background: #203b35; color: #e4ecbd; font-family: Georgia, serif; }
+.badge { color: #436457; background: #e9eddc; border-color: #d6ddc7; }
+.app-nav { background: #f7f5ed; border-color: #d9ddd2; }
+.app-nav .board-preview-link { align-self: center; padding: 9px 12px; color: #254f40; font-size: 12px; text-underline-offset: 4px; }
+button.primary, .app-nav button[aria-current="page"] { background: #254f40; border-color: #254f40; }
+button { font-family: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #c27b3f; outline-offset: 3px; }
+.portal h1, aside h1 { font-family: Georgia, serif; font-weight: 400; letter-spacing: -1px; color: #203b35; }
+.portal-card, aside, .tutor, .writing-panel { border-color: #dce0d4; }
+.portal-card h3 { color: #203b35; }
+.platform-status { padding: 10px 5%; background: #e9eddc; font-size: 13px; line-height: 1.6; }
+.platform-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 0 5% 10px; background: #e9eddc; }
+.platform-controls button { font-size: 12px; padding: 7px 12px; background: transparent; border: 1px solid #80917c; color: #203b35; }
+.platform-delete-confirmation { width: 100%; padding: 10px 0; line-height: 1.7; }
+.platform-delete-confirmation button { margin: 4px; }
+.classroom-safety-note { margin: 24px auto; padding: 0 24px; max-width: 1000px; font-size: 12px; color: #5b6b5e; line-height: 1.8; }
+a[href*="teacher-agent-backend"], #teacherMedia, #teacherMediaSettings, #mediaShortcuts, #teacherMediaNav, #photoHelpNav, #learningPhotoPanel { display: none !important; }
+@media (max-width: 600px) { .badge { display: none; } .app-nav { gap: 5px; } .app-nav button { font-size: 12px; padding: 8px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; } }
+.one-to-one-controls { margin: 18px 0; padding: 20px; background: #edf1e3; border: 1px solid #d4ddc7; border-radius: 12px; }
+.one-to-one-controls h3 { margin: 0 0 10px; font-family: Georgia, serif; font-size: 24px; font-weight: 400; color: #203b35; }
+.one-to-one-controls p { font-size: 13px; line-height: 1.7; }
+.one-to-one-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 12px; }
+.one-to-one-actions button { font-size: 13px; padding: 11px 14px; }
+#spokenConversationStatus { font-weight: 600; color: #254f40; }
+#startSpokenConversation { flex-basis: 100%; text-align: left; }
+#stopSpokenConversation { border-color: #ad6047; color: #884c39; }
+.conversation-mic-status { border-left: 3px solid #71874e; padding-left: 12px; color: #3c5542; }
+#conversationMicHelp { margin-top: 12px; font-size: 12px; line-height: 1.8; }
+#conversationMicHelp summary { cursor: pointer; font-weight: 600; }
+#conversationMicHelp a { color: #254f40; text-decoration: underline; text-underline-offset: 3px; }
+#classMicrophone, #handsFree { display: none; }
+@media (max-width: 600px) { .one-to-one-controls { padding: 16px; } .one-to-one-actions { display: grid; grid-template-columns: 1fr; } }

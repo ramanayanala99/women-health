@@ -1,0 +1,116 @@
+:root {
+  color-scheme: light;
+  --paper: #faf6ed;
+  --ink: #28463d;
+  --chalk: #fbf6df;
+  --chalk-font: "Chalkboard SE", "Comic Sans MS", "Trebuchet MS", cursive;
+  font-family: "Trebuchet MS", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-image: linear-gradient(#cabf9c14 1px, transparent 1px), linear-gradient(90deg, #cabf9c14 1px, transparent 1px);
+  background-size: 30px 30px;
+  min-height: 100vh;
+}
+button, input { font: inherit; }
+button, a, summary { -webkit-tap-highlight-color: transparent; }
+button, summary { cursor: pointer; }
+a { color: inherit; text-underline-offset: 4px; }
+:focus-visible { outline: 3px solid #bb7535; outline-offset: 5px; }
+[hidden] { display: none !important; }
+.preview-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; max-width: 1240px; margin: auto; padding: 25px 32px; border-bottom: 1px solid #dfdbcd; }
+.preview-brand { font-weight: 700; font-size: 18px; text-decoration: none; letter-spacing: -.5px; }
+.preview-brand span { color: #a26939; }
+.back-link { font-size: 13px; }
+.preview-class { max-width: 1240px; margin: auto; padding: 28px 32px 40px; }
+.preview-intro { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.preview-intro p { margin: 0; font-size: 12px; color: #6e7566; }
+.eyebrow { font-size: 10px !important; font-weight: 700; letter-spacing: 1.6px; }
+.teaching-scene { display: grid; grid-template-columns: minmax(0, 1fr) 170px; gap: 24px; align-items: end; }
+.chalkboard { padding: 11px; border: 2px solid #624424; border-radius: 19px; background: linear-gradient(110deg, #a17342, #80542f 70%, #96683c); box-shadow: 0 18px 25px -15px #352b29a3, inset 0 0 0 2px #bc92644d; }
+.chalk-surface { position: relative; min-height: 440px; padding: 29px 32px 52px; border: 4px solid #466457; border-radius: 10px; background: radial-gradient(ellipse at 10% 0%, #355a4c80, transparent 60%), #203f36; color: var(--chalk); font-family: var(--chalk-font); box-shadow: inset 0 0 30px #172e3266; }
+.chalk-surface h1 { margin: 0; font-size: clamp(19px, 2.3vw, 24px); font-weight: 500; text-align: center; text-shadow: 0 1px 1px #fff2; }
+.chalk-divider { margin: 20px 0 25px; border-top: 2px dashed #b2c4ac59; }
+.board-contents { display: grid; grid-template-columns: minmax(0, 1fr); gap: 15px; align-content: start; }
+.board-contents.has-diagram { grid-template-columns: minmax(0, 1fr) minmax(170px, .8fr); align-items: center; }
+.chalk-writing { display: grid; gap: 15px; }
+.chalk-line { margin: 0; font-size: clamp(17px, 2.1vw, 23px); line-height: 1.6; overflow-wrap: anywhere; }
+.chalk-line.equation { font-size: clamp(23px, 3.1vw, 35px); letter-spacing: 1px; }
+.chalk-line.emphasis { color: #e5d597; }
+.board-footnote { position: absolute; bottom: 14px; left: 32px; right: 24px; margin: 0; color: #c8d5be; font-size: 12px; line-height: 1.5; }
+.chalk-triangle { width: 100%; max-width: 270px; color: var(--chalk); overflow: visible; }
+.chalk-triangle path, .chalk-triangle polyline { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.chalk-triangle .hypotenuse { stroke: #e5d597; }
+.chalk-triangle text { font: 19px var(--chalk-font); fill: currentColor; }
+.board-contents.is-arriving .chalk-line, .board-contents.is-arriving .chalk-triangle { animation: chalk-arrive 600ms ease both; animation-delay: var(--chalk-delay, 0ms); }
+.teacher-guide { display: flex; flex-direction: column; align-items: center; gap: 14px; padding-bottom: 4px; }
+.teacher-guide img { display: block; width: 147px; height: auto; }
+.teacher-badge { display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 34px; width: 100%; padding: 8px; border-radius: 30px; background: #f0e5cf; font-size: 11px; color: #7c6145; }
+.teacher-badge svg { width: 15px; height: 15px; flex-shrink: 0; fill: none; stroke: #b16d35; stroke-width: 1.8; }
+.class-strip { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 22px; padding: 17px 22px; margin-top: 20px; background: #fffaf2; border: 1px solid #dfcfb7; border-radius: 13px; box-shadow: 0 5px 15px #8b735e06; }
+.class-strip details { position: relative; }
+.class-strip summary { font-weight: 700; font-size: 14px; }
+.class-strip details p { font-size: 12px; line-height: 1.8; }
+.class-strip > p { flex: 1; margin: 0; font-size: 13px; color: #975f38; }
+.class-strip > p span { color: #7f8073; }
+.step-counter { font-size: 12px; font-variant-numeric: tabular-nums; color: #6c7462; }
+.lesson-controls { padding: 27px 6px 0; }
+.explanation { max-width: 740px; }
+.explanation .eyebrow { color: #82745e; margin: 0 0 9px; }
+#explanation { margin: 0; min-height: 52px; font-size: 15px; line-height: 1.8; }
+.control-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 21px; }
+.control-buttons button, .practice-form button { border: 1px solid #b8c0ae; border-radius: 7px; padding: 11px 16px; background: #fffaf2; color: var(--ink); font-size: 13px; transition: transform 150ms, background 150ms; }
+.control-buttons button:hover:not(:disabled) { background: #e9eddd; transform: translateY(-1px); }
+.control-buttons button:active:not(:disabled) { transform: translateY(1px); }
+.control-buttons .primary { background: #284e3f; color: #fff8e6; border-color: #284e3f; }
+.control-buttons .primary:hover:not(:disabled) { background: #35614f; }
+.control-buttons .restart { margin-left: auto; border-color: transparent; background: transparent; text-decoration: underline; text-underline-offset: 4px; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+.voice-note, .preview-note { font-size: 11px; line-height: 1.7; color: #787764; }
+.voice-note { margin: 13px 0 0; }
+.preview-note { margin: 24px 6px 0; }
+.practice-form { display: grid; gap: 12px; margin-top: 15px; }
+.practice-form label { font-size: 17px; }
+.practice-entry { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.practice-form input { width: 90px; padding: 9px 12px; border: 1px solid #d4ddc3; border-radius: 5px; background: #fff8e9; color: #203f36; font-size: 20px; }
+.practice-form button { background: #dfd9b2; border-color: #dfd9b2; }
+.practice-feedback { font-size: 15px; line-height: 1.6; margin: 0; color: #e5d597; }
+.no-script { padding: 15px; background: #f0e5cf; }
+@keyframes chalk-arrive { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 850px) {
+  .teaching-scene { grid-template-columns: minmax(0, 1fr) 120px; gap: 12px; }
+  .teacher-guide img { width: 114px; }
+  .teacher-badge { font-size: 10px; }
+  .chalk-surface { padding: 24px 22px 50px; min-height: 430px; }
+  .board-contents.has-diagram { grid-template-columns: 1fr; gap: 10px; }
+  .chalk-triangle { max-width: 220px; max-height: 155px; justify-self: center; }
+  .board-footnote { left: 22px; }
+}
+@media (max-width: 600px) {
+  .preview-header { padding: 20px 17px; flex-wrap: wrap; gap: 12px; }
+  .preview-brand { font-size: 16px; }
+  .preview-class { padding: 22px 12px 30px; }
+  .preview-intro { padding: 0 5px; gap: 9px; }
+  .teaching-scene { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+  .chalkboard { padding: 7px; border-radius: 15px; }
+  .chalk-surface { min-height: 410px; padding: 24px 18px 56px; }
+  .chalk-line { font-size: 18px; }
+  .chalk-line.equation { font-size: 28px; }
+  .board-footnote { left: 18px; right: 18px; }
+  .teacher-guide { flex-direction: row; justify-content: flex-end; gap: 12px; padding: 0 10px; }
+  .teacher-guide img { width: 48px; }
+  .teacher-badge { width: auto; padding: 10px 14px; font-size: 12px; }
+  .class-strip { padding: 16px; margin-top: 15px; gap: 12px; }
+  .class-strip > p { flex-basis: calc(100% - 55px); order: 2; line-height: 1.7; }
+  .step-counter { margin-left: auto; }
+  #explanation { min-height: 84px; font-size: 14px; }
+  .control-buttons { gap: 8px; }
+  .control-buttons button { padding: 11px 12px; font-size: 12px; }
+  .control-buttons .restart { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

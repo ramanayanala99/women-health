@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Visual maths lab · Reusable teaching tools</title>
+  <link rel="stylesheet" href="visual-teaching.css">
+</head>
+<body style="margin:0;background:#f7f5ed">
+<main class="mvt-demo">
+  <div class="mvt-demo-header">
+    <a href="index.html">Back to the voice classroom</a>
+    <h1>See it move.<br>Make the maths yours.</h1>
+    <p>Replay a drawing, change a value, and compare the result. These browser-only teaching tools run independently of the tutor, AI connection and database. The same tools support the matched Grade 7 and Grade 8 voice lessons.</p>
+    <p>Scientific notation uses a × 10ⁿ with a normalised coefficient. “Read this model” speaks mathematical symbols in English. Speech is optional and never requests your microphone.</p>
+    <p id="demoVoiceStatus" role="status">Choose a model to explore.</p>
+  </div>
+  <div id="visualDemoModels" class="mvt-demo-grid"></div>
+  <section class="mvt-demo-help">
+    <h2>Reuse these tools in another web app</h2>
+    <p>Copy <code>maths-notation.js</code>, <code>visual-teaching.js</code> and <code>visual-teaching.css</code> into the other app. Load the notation script before the visual script, then call <code>MathsVisualTeaching.mount(container, { kind: 'graph' })</code>. Destroy the mounted instance when the container leaves the page.</p>
+    <p>These visual modules need no framework or Netlify backend. The complete tutor still needs its classroom integrations and same-origin AI and progress endpoints. A native mobile app needs a web view or a separate native implementation; browser speech availability varies.</p>
+  </section>
+</main>
+<script src="maths-notation.js"></script>
+<script src="visual-teaching.js"></script>
+<script src="visual-teaching-demo.js"></script>
+</body>
+</html>

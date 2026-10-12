@@ -1,36 +1,19 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MathsMadeEasyAI
 
-## Getting Started
+MathsMadeEasyAI is a personal maths-learning website with guided lessons, an interactive teaching board, practice worksheets, and one-to-one AI conversation. The existing maths classroom was restored from the project history, replacing the former CycleAI women’s-health application.
 
-First, run the development server:
+Open `/tutor/index.html` from the home page to enter the classroom. Prepared lessons remain available when the AI connection is unavailable. Voice input and spoken replies depend on browser speech support and microphone permission.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Netlify
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The project uses Next.js with Netlify Functions for the AI tutor and Netlify Database for saved learning. Netlify AI Gateway supplies the AI provider configuration without adding credentials to source code. Database migrations live in `netlify/database/migrations/` and are applied during deployment. The daily cleanup removes expired learning records and usage counters.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Saved learning belongs to this browser through an HttpOnly cookie, not a user account. Clearing cookies loses access to that saved learning. AI replies are learning guidance, not guaranteed correct answers.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local development
 
-## Learn More
+Install the locked dependencies with `npm ci`, then use `netlify dev --port 8889` for local platform emulation.
 
-To learn more about Next.js, take a look at the following resources:
+## Validation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run `npx tsc --noEmit` for type checking and `node --test tutor/tests/site-restoration.test.mjs tutor/tests/tutor-service.test.mjs tutor/tests/conversation-instructions.test.mjs tutor/tests/netlify-integration.test.cjs tutor/tests/visual-teaching.test.mjs` for restoration, tutor, classroom, and visual-teaching checks. Further curriculum tests and feature notes are in `tutor/`.
