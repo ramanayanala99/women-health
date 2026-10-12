@@ -181,3 +181,129 @@ test('the algebra board restores on saved-class resume and is removed on exit', 
   assert.ok(!browser.document.body.classList.contains('grade8-algebra-board'));
   dom.window.close();
 });
+
+test('the Grade 9 entry shows geometry and finance with honest teaching availability', () => {
+  const { dom, get } = classroom('?grade9-chalkboard=1');
+  const catalogue = get('grade9ChalkboardChapters');
+  assert.equal(catalogue.querySelectorAll('.g8-chapter-card').length, 2);
+  assert.equal(catalogue.querySelectorAll('[data-topic]').length, 10);
+  assert.ok(catalogue.textContent.includes('Geometric and Measurement Relationships'));
+  assert.ok(catalogue.textContent.includes('Financial Decisions'));
+  assert.ok(catalogue.textContent.includes('9 prepared skill lessons'));
+  assert.ok(catalogue.textContent.includes('1 research / AI topic'));
+  assert.equal(catalogue.querySelectorAll('.g8-chapter-check').length, 2);
+  assert.equal(get('grade9ChalkboardScene'), null);
+  dom.window.close();
+});
+
+test('all nine Grade 9 prepared topics use the real classroom and keep mastery progress', async () => {
+  const { dom, browser, run, get, tick, writes } = classroom('?grade9-chalkboard=1');
+  await run('tutorStorage.hydrate()');
+  const topics = JSON.parse(run('JSON.stringify(Grade9Chalkboard.topics)'));
+  for (const topic of topics.filter(topic => topic.code !== 'E1.1')) {
+    run(`Grade9Chalkboard.openTopic(${JSON.stringify(topic.id)})`);
+    await Promise.resolve();
+    assert.equal(run('lesson.id'), topic.id);
+    assert.equal(run('lesson.pending'), false);
+    assert.equal(run('lesson.mastery.length'), 3);
+    assert.ok(get('grade9ChalkboardScene').contains(get('working')));
+    assert.ok(browser.document.body.classList.contains('course-chalkboard'));
+    assert.equal(browser.document.querySelectorAll('.g8-board-heading').length, 1);
+    assert.equal(browser.document.querySelectorAll('.board').length, 1);
+    run('phase=1; boardStep=0; render()');
+    tick(3000);
+    assert.ok(get('working').textContent.trim().length > 0, topic.id);
+    run('phase=5; index=0; masteryCorrect=0; attempts=0; render()');
+    for (let questionIndex = 0; questionIndex < 3; questionIndex++) {
+      run('checkAnswer(String(question().a))');
+      run('nextTurn()');
+    }
+    assert.equal(run('phase'), 6, topic.id);
+    assert.equal(run('masteryCorrect'), 3, topic.id);
+    run('saveProgress()');
+    assert.equal(run(`ontRecord(${JSON.stringify(topic.id)}).completed`), true);
+  }
+  run('Grade9Chalkboard.openChapters()');
+  tick(1000);
+  await Promise.resolve();
+  await Promise.resolve();
+  assert.ok(get('grade9ChalkboardChapters').textContent.includes('5 / 6 topics completed'));
+  assert.ok(get('grade9ChalkboardChapters').textContent.includes('4 / 4 topics completed'));
+  assert.equal(get('grade9ChalkboardScene'), null);
+  await new Promise(resolve => setImmediate(resolve));
+  await run('tutorStorage.retry()');
+  assert.ok(writes.some(write => write.key?.includes('ont-9-MTH1W-F1')));
+  dom.window.close();
+});
+
+test('Grade 9 navigation, research disclosure, course switching and exit clean up the board', async () => {
+  const { dom, browser, run, get } = classroom('?grade9-chalkboard=1');
+  get('grade9ChalkboardChapters').querySelector('[data-start-chapter="ont-9-MTH1W-E1"]').click();
+  assert.equal(run('lesson.code'), 'E1.2');
+  get('grade9BoardPrevious').click();
+  assert.equal(run('lesson.pending'), true);
+  assert.ok(get('grade9BoardTeacherStatus').textContent.includes('AI teaching needed'));
+  assert.ok(get('grade9BoardPrevious').disabled);
+  assert.equal(run('agentEnabled'), false);
+  get('grade9BoardNext').click();
+  assert.equal(run('lesson.code'), 'E1.2');
+  get('grade9BoardChapter').value = 'ont-9-MTH1W-F1';
+  get('grade9BoardChapter').dispatchEvent(new browser.Event('change'));
+  assert.equal(run('lesson.code'), 'F1.1');
+  get('grade9BoardTopic').value = 'ont-9-MTH1W-F1.4-topic';
+  get('grade9BoardTopic').dispatchEvent(new browser.Event('change'));
+  assert.ok(get('grade9BoardNext').disabled);
+  run('Grade8Classes.open(Grade8Classes.byId.get("g8-substitution"))');
+  assert.ok(get('grade8AlgebraScene'));
+  assert.equal(get('grade9ChalkboardScene'), null);
+  run('Grade9Chalkboard.openTopic("ont-9-MTH1W-E1.5-topic")');
+  assert.ok(get('grade9ChalkboardScene'));
+  assert.equal(get('grade8AlgebraScene'), null);
+  run('Grade8Classes.open(Grade8Classes.byId.get("g8-rational-add"))');
+  assert.equal(get('grade9ChalkboardScene'), null);
+  run('Grade9Chalkboard.openTopic("ont-9-MTH1W-F1.1-topic")');
+  browser.document.querySelector('.room-toolbar button').click();
+  await Promise.resolve();
+  assert.equal(get('grade9ChalkboardScene'), null);
+  assert.equal(browser.document.body.classList.contains('course-chalkboard'), false);
+  assert.equal(browser.document.querySelectorAll('.board').length, 1);
+  dom.window.close();
+});
+
+test('both Grade 9 chapter skill checks retain the existing saved-results service', async () => {
+  const { dom, browser, run, get, tick, writes } = classroom('?grade9-chalkboard=1');
+  await run('tutorStorage.hydrate()');
+  for (const chapterId of ['ont-9-MTH1W-E1', 'ont-9-MTH1W-F1']) {
+    run('Grade9Chalkboard.openChapters()');
+    get('grade9ChalkboardChapters').querySelector(`[data-chapter="${chapterId}"] .g8-chapter-check`).click();
+    const form = run('ontUI.portal').querySelector('form');
+    assert.ok(form);
+    assert.equal(form.querySelectorAll('input').length, 5);
+    for (const input of form.querySelectorAll('input')) input.value = '0';
+    form.dispatchEvent(new browser.Event('submit', { cancelable: true }));
+    assert.ok(form.textContent.includes('Saved with your classroom'));
+    assert.equal(run(`readSaved(ontKey('exam',${JSON.stringify(chapterId)})).length`), 1);
+  }
+  tick(1000);
+  await Promise.resolve();
+  await Promise.resolve();
+  await new Promise(resolve => setImmediate(resolve));
+  await run('tutorStorage.retry()');
+  assert.ok(writes.some(write => write.key?.includes('exam')));
+  dom.window.close();
+});
+
+test('Grade 9 resumes its original saved lesson and unrelated Grade 9 chapters keep their board', () => {
+  const { dom, run, get } = classroom();
+  run('Grade9Chalkboard.openTopic("ont-9-MTH1W-E1.5-topic")');
+  run('phase=2; index=0; saveProgress(); Grade8AlgebraBoard.clear()');
+  assert.equal(get('grade9ChalkboardScene'), null);
+  get('resumeSaved').click();
+  assert.equal(run('phase'), 2);
+  assert.ok(get('grade9ChalkboardScene'));
+  assert.equal(get('grade9BoardTopic').value, 'ont-9-MTH1W-E1.5-topic');
+  run('const otherChapter=grade9Course.chapters.find(chapter=>chapter.id==="ont-9-MTH1W-C1"); ontOpenTopic(grade9Course,otherChapter,otherChapter.topics[1])');
+  assert.equal(get('grade9ChalkboardScene'), null);
+  assert.equal(dom.window.document.body.classList.contains('course-chalkboard'), false);
+  dom.window.close();
+});

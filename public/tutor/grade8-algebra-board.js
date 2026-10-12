@@ -1,7 +1,15 @@
 (() => {
-  const chapters = Grade8Classes.course.chapters.filter(chapter => ['g8-ch-6', 'g8-ch-7'].includes(chapter.id));
-  const topics = chapters.flatMap(chapter => chapter.sections.flatMap(section => section.topics));
-  const topicIds = new Set(topics.map(topic => topic.id));
+  const grade8Chapters = Grade8Classes.course.chapters.filter(chapter => ['g8-ch-6', 'g8-ch-7'].includes(chapter.id));
+  const grade9Chapters = grade9Course.chapters.filter(chapter => ['ont-9-MTH1W-E1', 'ont-9-MTH1W-F1'].includes(chapter.id)).map(chapter => ({ ...chapter, sections: [{ title: 'Chapter topics', topics: chapter.topics.map(topic => ({ ...topic, chapterId: chapter.id })) }] }));
+  const courses = [
+    { grade: 8, chapters: grade8Chapters, className: 'grade8-algebra-board', catalogueId: 'grade8AlgebraChapters', sceneId: 'grade8AlgebraScene', name: 'algebra', headline: 'Algebra. On your chalkboard.' },
+    { grade: 9, chapters: grade9Chapters, className: 'grade9-chapter-board', catalogueId: 'grade9ChalkboardChapters', sceneId: 'grade9ChalkboardScene', name: 'geometry and finance', headline: 'Geometry & finance. More room to learn.' },
+  ];
+  for (const course of courses) course.topics = course.chapters.flatMap(chapter => chapter.sections.flatMap(section => section.topics));
+  let currentCourse = courses[0];
+  let chapters = currentCourse.chapters;
+  let topics = currentCourse.topics;
+  let topicIds = new Set(topics.map(topic => topic.id));
   const board = document.querySelector('.board');
   let scene;
   let heading;
@@ -26,14 +34,48 @@
     return node;
   };
 
+  function selectCourse(course) {
+    if (course === currentCourse) return;
+    clear();
+    currentCourse = course;
+    chapters = course.chapters;
+    topics = course.topics;
+    topicIds = new Set(topics.map(topic => topic.id));
+  }
+
+  const boardId = suffix => `grade${currentCourse.grade}Board${suffix}`;
+  const grade9State = () => ({ stage: lesson.pending ? 'research' : phase === 6 ? 'summary' : phase >= 2 ? 'guided' : 'intro' });
+  const currentState = () => currentCourse.grade === 8 ? OneToOneClass.state() : grade9State();
+  const active = () => currentCourse.grade === 8 ? OneToOneClass.active() : lesson.grade === 9 && topicIds.has(lesson.id) && !agentEnabled;
+  const resultFor = topic => currentCourse.grade === 8 ? Grade8Classes.latest(topic.id) : ontRecord(topic.id);
+  const preparedTopic = topic => currentCourse.grade === 8 || GRADE9_SKILLS.some(skill => skill.code === topic.code);
+  const statsFor = chapter => currentCourse.grade === 8 ? Grade8Classes.chapterStats(chapter) : { total: chapter.topics.length, done: chapter.topics.filter(topic => ontRecord(topic.id).completed).length };
+
+  function saveCurrent() {
+    if (OneToOneClass.active()) OneToOneClass.save();
+    else if (activeLesson && !lesson.pending) saveProgress();
+  }
+
+  function setupGrade9() {
+    if (!ontMatchesProfile() || $('country').value !== 'Canada') ontChooseOntario();
+    $('grade').value = '9';
+    ontCourseId = 'MTH1W';
+  }
+
   function openTopic(id) {
     if (!topicIds.has(id)) return;
-    if (OneToOneClass.active()) OneToOneClass.save();
-    Grade8Classes.open(Grade8Classes.byId.get(id));
+    saveCurrent();
+    if (currentCourse.grade === 8) Grade8Classes.open(Grade8Classes.byId.get(id));
+    else {
+      setupGrade9();
+      const chapter = grade9Course.chapters.find(candidate => candidate.topics.some(topic => topic.id === id));
+      ontOpenTopic(grade9Course, chapter, chapter.topics.find(topic => topic.id === id));
+      sync(lesson, currentState());
+    }
   }
 
   function clear() {
-    document.body.classList.remove('grade8-algebra-board');
+    document.body.classList.remove('grade8-algebra-board', 'grade9-chapter-board', 'course-chalkboard');
     if (!scene) return;
     scene.before(board);
     scene.remove();
@@ -44,13 +86,13 @@
 
   function mount() {
     scene = element('section', undefined, 'g8-board-scene');
-    scene.id = 'grade8AlgebraScene';
-    scene.setAttribute('aria-label', 'Grade 8 algebra chalkboard classroom');
+    scene.id = currentCourse.sceneId;
+    scene.setAttribute('aria-label', `Grade ${currentCourse.grade} ${currentCourse.name} chalkboard classroom`);
     board.before(scene);
     scene.append(board);
     const titleArea = element('div', undefined, 'g8-board-heading');
     heading = element('h2');
-    heading.id = 'grade8BoardHeading';
+    heading.id = boardId('Heading');
     subtitle = element('p');
     titleArea.append(heading, subtitle);
     board.prepend(titleArea);
@@ -63,15 +105,15 @@
     portrait.width = 122;
     portrait.height = 236;
     teacherStatus = element('span', 'Ready to learn', 'g8-teacher-status');
-    teacherStatus.id = 'grade8BoardTeacherStatus';
+    teacherStatus.id = boardId('TeacherStatus');
     teacherStatus.setAttribute('role', 'status');
     teacher.append(portrait, teacherStatus, element('small', 'Illustrated guide'));
 
     const strip = element('nav', undefined, 'g8-class-strip');
-    strip.setAttribute('aria-label', 'Grade 8 algebra chapter and lesson navigation');
-    const chapterLabel = element('label', 'Grade 8 chapter');
+    strip.setAttribute('aria-label', `Grade ${currentCourse.grade} ${currentCourse.name} chapter and lesson navigation`);
+    const chapterLabel = element('label', `Grade ${currentCourse.grade} chapter`);
     chapterPicker = element('select');
-    chapterPicker.id = 'grade8BoardChapter';
+    chapterPicker.id = boardId('Chapter');
     for (const chapter of chapters) {
       const option = element('option', chapter.title);
       option.value = chapter.id;
@@ -84,36 +126,39 @@
     chapterLabel.append(chapterPicker);
     const topicLabel = element('label', 'Lesson');
     topicPicker = element('select');
-    topicPicker.id = 'grade8BoardTopic';
+    topicPicker.id = boardId('Topic');
     topicPicker.addEventListener('change', () => openTopic(topicPicker.value));
     topicLabel.append(topicPicker);
     chapterProgress = element('p', '', 'g8-chapter-progress');
-    chapterProgress.id = 'grade8BoardProgress';
+    chapterProgress.id = boardId('Progress');
     previousTopic = button('← Previous lesson', () => {
       const position = topics.findIndex(topic => topic.id === currentTopicId);
       if (position > 0) openTopic(topics[position - 1].id);
     });
-    previousTopic.id = 'grade8BoardPrevious';
+    previousTopic.id = boardId('Previous');
     nextTopic = button('Next lesson →', () => {
       const position = topics.findIndex(topic => topic.id === currentTopicId);
       if (position < topics.length - 1) openTopic(topics[position + 1].id);
     });
-    nextTopic.id = 'grade8BoardNext';
+    nextTopic.id = boardId('Next');
     const actions = element('div', undefined, 'g8-strip-actions');
-    actions.append(previousTopic, nextTopic, button('Both chapters', openChapters));
+    actions.append(previousTopic, nextTopic, button('Both chapters', () => openChapters(currentCourse)));
     strip.append(chapterLabel, topicLabel, chapterProgress, actions);
     scene.append(teacher, strip);
   }
 
   function sync(prepared, state) {
-    if (prepared.grade !== 8 || !topicIds.has(prepared.id) || !OneToOneClass.active()) return clear();
+    const course = courses.find(candidate => candidate.grade === prepared.grade && candidate.topics.some(topic => topic.id === prepared.id));
+    if (!course) return clear();
+    selectCourse(course);
+    if (!active()) return clear();
     if (!scene) mount();
-    if (!document.body.classList.contains('grade8-algebra-board')) document.body.classList.add('grade8-algebra-board');
-    const chapter = chapters.find(candidate => candidate.id === prepared.chapterId);
+    if (!document.body.classList.contains(currentCourse.className)) document.body.classList.add(currentCourse.className, 'course-chalkboard');
+    const chapter = chapters.find(candidate => candidate.sections.some(section => section.topics.some(topic => topic.id === prepared.id)));
     if (currentTopicId !== prepared.id) {
       currentTopicId = prepared.id;
       heading.textContent = chapter.title;
-      subtitle.textContent = 'Grade 8 · ' + prepared.name;
+      subtitle.textContent = `Grade ${currentCourse.grade} · ${prepared.name}${prepared.pending ? ' · Research / AI connection needed' : ''}`;
       chapterPicker.value = chapter.id;
       topicPicker.replaceChildren();
       for (const section of chapter.sections) {
@@ -131,71 +176,98 @@
     const position = topics.findIndex(topic => topic.id === prepared.id);
     previousTopic.disabled = position === 0;
     nextTopic.disabled = position === topics.length - 1;
-    const stats = Grade8Classes.chapterStats(chapter);
-    chapterProgress.textContent = `${stats.done} / ${stats.total} lessons assessed · Lesson ${position + 1} of ${topics.length} across both chapters`;
-    teacherStatus.textContent = paused ? 'Paused' : speechBusy ? 'Explaining' : ['check', 'guided', 'exercise'].includes(state.stage) ? 'Your turn' : state.stage === 'summary' ? 'Class complete' : 'Ready to learn';
+    const stats = statsFor(chapter);
+    chapterProgress.textContent = `${stats.done} / ${stats.total} ${currentCourse.grade === 8 ? 'lessons assessed' : 'topics completed'} · ${currentCourse.grade === 8 ? 'Lesson' : 'Topic'} ${position + 1} of ${topics.length} across both chapters`;
+    teacherStatus.textContent = prepared.pending ? 'AI teaching needed' : paused ? 'Paused' : speechBusy ? 'Explaining' : ['check', 'guided', 'exercise'].includes(state.stage) ? 'Your turn' : state.stage === 'summary' ? 'Class complete' : 'Ready to learn';
   }
 
-  function openChapters() {
-    if (OneToOneClass.active()) OneToOneClass.save();
+  function openChapters(course = courses[0]) {
+    saveCurrent();
     if (agentEnabled) endAgent(false);
     pauseAdvance(true);
     clear();
-    tutorStorage.setItem('ut-universal-grade', '8');
-    ontUI.show('universal');
+    selectCourse(course);
+    if (course.grade === 8) {
+      tutorStorage.setItem('ut-universal-grade', '8');
+      ontUI.show('universal');
+    } else {
+      setupGrade9();
+      ontUI.show('library');
+    }
     const portal = ontUI.portal;
     portal.replaceChildren();
     const catalogue = element('section', undefined, 'g8-algebra-catalogue');
-    catalogue.id = 'grade8AlgebraChapters';
-    catalogue.append(element('p', 'GRADE 8 · TWO COMPLETE COURSE CHAPTERS', 'eyebrow'), element('h1', 'Algebra. On your chalkboard.'), element('p', 'Every lesson from these two chapters, with your illustrated guide beside the board. Learn the idea, follow two examples, then practise at your pace.', 'g8-catalogue-intro'));
+    catalogue.id = course.catalogueId;
+    catalogue.append(element('p', `GRADE ${course.grade} · TWO ${course.grade === 8 ? 'COMPLETE COURSE' : 'ONTARIO'} CHAPTERS`, 'eyebrow'), element('h1', course.headline), element('p', 'A larger chalkboard, smaller writing, and your illustrated guide beside the board. Choose a topic, follow the worked steps, and practise at your pace.', 'g8-catalogue-intro'));
     const overview = element('div', undefined, 'g8-course-overview');
-    overview.append(element('span', `${topics.length} lessons`), element('span', `${topics.length * 2} worked examples`), element('span', `${topics.length * 4} guided questions`), element('span', `${topics.length * 10} exercise questions`));
+    if (course.grade === 8) overview.append(element('span', `${topics.length} lessons`), element('span', `${topics.length * 2} worked examples`), element('span', `${topics.length * 4} guided questions`), element('span', `${topics.length * 10} exercise questions`));
+    else overview.append(element('span', `${topics.length} topics`), element('span', `${topics.filter(preparedTopic).length} prepared skill lessons`), element('span', '1 research / AI topic'), element('span', 'Chapter skill checks'));
     catalogue.append(overview);
     const list = element('div', undefined, 'g8-chapter-cards');
     for (const [position, chapter] of chapters.entries()) {
       const card = element('article', undefined, 'g8-chapter-card');
       card.dataset.chapter = chapter.id;
       const chapterTopics = chapter.sections.flatMap(section => section.topics);
-      const stats = Grade8Classes.chapterStats(chapter);
-      card.append(element('p', `CHAPTER ${position + 1} OF 2 · ${chapterTopics.length} LESSONS`, 'eyebrow'), element('h2', chapter.title), element('p', `${stats.done} / ${stats.total} lessons assessed`, 'g8-chapter-progress'));
+      const stats = statsFor(chapter);
+      card.append(element('p', `CHAPTER ${position + 1} OF 2 · ${chapterTopics.length} ${course.grade === 8 ? 'LESSONS' : 'TOPICS'}`, 'eyebrow'), element('h2', chapter.title), element('p', `${stats.done} / ${stats.total} ${course.grade === 8 ? 'lessons assessed' : 'topics completed'}`, 'g8-chapter-progress'));
       for (const section of chapter.sections) {
         card.append(element('h3', section.title));
         const lessonList = element('ul');
         for (const topic of section.topics) {
           const row = element('li');
-          const result = Grade8Classes.latest(topic.id);
+          const result = resultFor(topic);
           const action = button(topic.title, () => openTopic(topic.id), 'g8-topic-link');
           action.dataset.topic = topic.id;
-          row.append(action, element('span', result ? `${result.correct}/10 · ${result.percent}%` : 'Not assessed', 'g8-topic-result'));
+          const status = course.grade === 8 ? result ? `${result.correct}/10 · ${result.percent}%` : 'Not assessed' : !preparedTopic(topic) ? 'Research / reflection · AI connection needed' : result.completed ? 'Completed' : 'Prepared skill lesson';
+          row.append(action, element('span', status, 'g8-topic-result'));
           lessonList.append(row);
         }
         card.append(lessonList);
       }
-      const first = chapterTopics.find(topic => !Grade8Classes.latest(topic.id)) || chapterTopics[0];
+      const first = chapterTopics.find(topic => preparedTopic(topic) && (course.grade === 8 ? !resultFor(topic) : !resultFor(topic).completed)) || chapterTopics.find(preparedTopic) || chapterTopics[0];
       const start = button(stats.done ? 'Continue chapter →' : 'Start chapter →', () => openTopic(first.id), 'primary g8-start-chapter');
       start.dataset.startChapter = chapter.id;
       card.append(start);
+      if (course.grade === 9) card.append(button('Chapter skill check', () => {
+        saveCurrent();
+        pauseAdvance(true);
+        clear();
+        setupGrade9();
+        ontUI.show('library');
+        grade9SkillExam(grade9Course, grade9Course.chapters.find(candidate => candidate.id === chapter.id));
+      }, 'g8-chapter-check'));
       list.append(card);
     }
-    catalogue.append(list, element('p', 'Two examples → understanding check → four guided questions → a ten-question exercise for every lesson. Results and checkpoints use your existing saved-learning service. A completed exercise is an attempt, not a guarantee of mastery.', 'g8-catalogue-note'), element('p', 'These are complete chapters from the existing international Grade 8 course, not a claim of covering every national textbook. Voice uses your browser; the teacher illustration is not a talking avatar.', 'g8-catalogue-note'), button('Browse all Grade 8 chapters', () => ontUI.show('universal')));
+    catalogue.append(list, element('p', course.grade === 8 ? 'Two examples → understanding check → four guided questions → a ten-question exercise for every lesson. Results and checkpoints use your existing saved-learning service. A completed exercise is an attempt, not a guarantee of mastery.' : 'Nine prepared skill lessons include worked steps, guided practice, applications and three-question checks. Geometry and measurement across cultures is a research / reflection topic that needs the connected AI teacher for full teaching. No AI request starts automatically.', 'g8-catalogue-note'), element('p', course.grade === 8 ? 'These are complete chapters from the existing international Grade 8 course, not a claim of covering every national textbook. Voice uses your browser; the teacher illustration is not a talking avatar.' : 'All ten entries from these two Ontario Grade 9 chapters are included. Prepared lessons are skill introductions, not exhaustive curriculum coverage. Saved progress uses your existing classroom service. Financial examples are maths exercises, not personal financial advice.', 'g8-catalogue-note'), button(`Browse all Grade ${course.grade} chapters`, () => ontUI.show(course.grade === 8 ? 'universal' : 'library')));
     portal.append(catalogue);
   }
 
-  window.Grade8AlgebraBoard = Object.freeze({ sync, clear, openChapters, topics });
-  const navigation = button('Grade 8 algebra · Chalkboard', openChapters);
+  window.Grade8AlgebraBoard = Object.freeze({ sync, clear, openChapters: () => openChapters(courses[0]), topics: courses[0].topics });
+  window.Grade9Chalkboard = Object.freeze({ openChapters: () => openChapters(courses[1]), openTopic: id => { selectCourse(courses[1]); openTopic(id); }, topics: courses[1].topics });
+  const navigation = button('Grade 8 algebra · Chalkboard', () => openChapters(courses[0]));
   navigation.id = 'grade8AlgebraNav';
   document.querySelector('.app-nav').append(navigation);
+  const grade9Navigation = button('Grade 9 geometry & finance · Chalkboard', () => openChapters(courses[1]));
+  grade9Navigation.id = 'grade9ChalkboardNav';
+  document.querySelector('.app-nav').append(grade9Navigation);
+  const previousRender = render;
+  render = function (...args) {
+    const result = previousRender(...args);
+    if (lesson.grade === 9) sync(lesson, grade9State());
+    return result;
+  };
   const presence = document.querySelector('.teacher-presence');
   new MutationObserver(() => {
     if (!scene) return;
-    if (!OneToOneClass.active() || !document.body.classList.contains('in-classroom')) return clear();
-    const state = OneToOneClass.state();
+    if (!active() || !document.body.classList.contains('in-classroom')) return clear();
+    const state = currentState();
     sync(lesson, state);
   }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   if (presence) new MutationObserver(() => {
     if (!scene) return;
-    if (!OneToOneClass.active()) return clear();
-    sync(lesson, OneToOneClass.state());
+    if (!active()) return clear();
+    sync(lesson, currentState());
   }).observe(presence, { attributes: true, attributeFilter: ['data-state'] });
-  if (new URLSearchParams(location.search).get('grade8-algebra') === '1') openChapters();
+  if (new URLSearchParams(location.search).get('grade8-algebra') === '1') openChapters(courses[0]);
+  if (new URLSearchParams(location.search).get('grade9-chalkboard') === '1') openChapters(courses[1]);
 })();

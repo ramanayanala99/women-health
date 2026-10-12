@@ -4,6 +4,16 @@ The attached Universal Online Maths Tutor snapshot was integrated into the exist
 
 ## Teaching and conversation
 
+### Grade 9 geometry and finance chalkboard chapters
+
+Choose **Grade 9 geometry & finance · Chalkboard** in the classroom navigation or the Grade 9 larger-chalkboard link on the home page. The direct entry is `/tutor/index.html?grade9-chalkboard=1`.
+
+The two Ontario Grade 9 chapters are **Geometric and Measurement Relationships** and **Financial Decisions**. All ten course topics are accessible through chapter and lesson selectors, previous/next controls, and the two-chapter catalogue. Nine prepared skill lessons retain their original worked steps, guided practice, applications, three-question mastery checks, optional browser voice, and saved progress. Geometry and measurement across cultures remains a research/reflection topic requiring the connected AI teacher for full teaching; opening it does not automatically request AI. Chapter skill checks continue to save through the existing Netlify Database service. These lessons are introductions, not exhaustive curriculum coverage, and financial examples are educational maths rather than personal advice.
+
+Both the Grade 8 algebra and Grade 9 chapter classrooms use a wider, taller chalkboard with smaller writing: 16px worked steps, 18–22px equations, and a compact teaching-guide column. On mobile, the board fills the width and the teaching guide and controls move beneath it. The single-class preview and unrelated classrooms remain unchanged.
+
+Run `node --test tutor/tests/grade8-algebra-board.test.mjs` to check both grade levels, Grade 9 topic availability, prepared lessons and mastery, navigation, saved chapter checks, and cleanup between classrooms.
+
 ### Grade 8 algebra chalkboard chapters
 
 Choose **Grade 8 algebra · Chalkboard** in the classroom navigation or **Open two Grade 8 algebra chalkboard chapters** on the home page. The direct classroom entry is `/tutor/index.html?grade8-algebra=1`.

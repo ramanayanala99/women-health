@@ -15,6 +15,7 @@ export default function Home() {
             <p className="hero-description">A patient AI maths tutor that explains, listens, and works through problems with you. Ask again. Try another way. Find your “oh, I get it” moment.</p>
             <a className="hero-cta" href="/tutor/index.html">Let’s learn together <span aria-hidden="true">↗</span></a>
             <p className="hero-note">Prepared lessons · Interactive whiteboard · Voice &amp; text</p>
+            <p className="hero-note"><a className="board-preview-link" href="/tutor/index.html?grade9-chalkboard=1">Open Grade 9 geometry &amp; finance on the larger chalkboard <span aria-hidden="true">↗</span></a></p>
             <p className="hero-note"><a className="board-preview-link" href="/tutor/index.html?grade8-algebra=1">Open two Grade 8 algebra chalkboard chapters <span aria-hidden="true">↗</span></a></p>
             <p className="hero-note"><a className="board-preview-link" href="/tutor/board-preview.html">Preview one Grade 9 chalkboard class <span aria-hidden="true">↗</span></a></p>
           </div>

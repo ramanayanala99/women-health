@@ -1,15 +1,16 @@
-.grade8-algebra-board.in-classroom {
+.course-chalkboard.in-classroom {
   background-color: #faf6ed;
   background-image: linear-gradient(#cabf9c14 1px, transparent 1px), linear-gradient(90deg, #cabf9c14 1px, transparent 1px);
   background-size: 30px 30px;
 }
-.grade8-algebra-board.in-classroom .columns { grid-template-columns: minmax(0, 1fr) 330px; align-items: start; }
-.g8-board-scene { display: grid; grid-template-columns: minmax(0, 1fr) 115px; align-items: end; gap: 16px; min-width: 0; }
-.grade8-algebra-board.in-classroom .board {
+.course-chalkboard.in-classroom #classroomPage { max-width: 1920px; padding: 16px 2%; }
+.course-chalkboard.in-classroom .columns { grid-template-columns: minmax(0, 1fr) 270px; align-items: start; gap: 16px; }
+.g8-board-scene { display: grid; grid-template-columns: minmax(0, 1fr) 88px; align-items: end; gap: 12px; min-width: 0; }
+.course-chalkboard.in-classroom .board {
   min-width: 0;
-  min-height: 460px;
-  max-height: 78vh;
-  padding: 25px;
+  min-height: 600px;
+  max-height: 86vh;
+  padding: 22px;
   border: 11px solid #94683e;
   outline: 2px solid #624424;
   border-radius: 13px;
@@ -19,18 +20,20 @@
   font-family: 'Chalkboard SE', 'Segoe Print', 'Bradley Hand', cursive;
 }
 .g8-board-heading { border-bottom: 2px dashed #b2c4ac59; padding-bottom: 18px; margin-bottom: 16px; }
-.g8-board-heading h2 { font: 500 clamp(18px, 2vw, 25px)/1.5 'Chalkboard SE', 'Segoe Print', 'Bradley Hand', cursive; text-align: center; color: #fbf6df; margin: 0; }
-.g8-board-heading p { color: #e5d597; margin: 12px 0 0; font-size: 14px; line-height: 1.6; }
-.grade8-algebra-board .board-head { color: #c8d5be; font-size: 11px; gap: 10px; }
-.grade8-algebra-board .board .equation { color: #fbf6df; font-size: clamp(20px, 2.3vw, 30px); overflow-wrap: anywhere; }
-.grade8-algebra-board .board .step, .grade8-algebra-board .board #boardnote { color: #fbf6df; overflow-wrap: anywhere; }
-.grade8-algebra-board .board .step small { color: #d8dfc7; }
-.grade8-algebra-board .board .step:last-child { color: #e5d597; }
-.grade8-algebra-board .board #working, .grade8-algebra-board .board #studentWork { font-size: 19px; }
-.grade8-algebra-board .room-rail { border-color: #d9ddd2; background: #fffaf2; }
-.grade8-algebra-board .room-toolbar, .grade8-algebra-board .room-top, .grade8-algebra-board .goal { color: #28463d; }
+.g8-board-heading h2 { font: 500 clamp(17px, 1.6vw, 20px)/1.5 'Chalkboard SE', 'Segoe Print', 'Bradley Hand', cursive; text-align: center; color: #fbf6df; margin: 0; }
+.g8-board-heading p { color: #e5d597; margin: 10px 0 0; font-size: 12px; line-height: 1.6; }
+.course-chalkboard .board-head { color: #c8d5be; font-size: 11px; gap: 10px; }
+.course-chalkboard .board .equation { color: #fbf6df; font-size: clamp(18px, 1.8vw, 22px); overflow-wrap: anywhere; }
+.course-chalkboard .board .step, .course-chalkboard .board #boardnote { color: #fbf6df; font-size: 16px; overflow-wrap: anywhere; }
+.course-chalkboard .board .step small { color: #d8dfc7; }
+.course-chalkboard .board .step:last-child { color: #e5d597; }
+.course-chalkboard .board #working, .course-chalkboard .board #studentWork { font-size: 16px; }
+.course-chalkboard .room-rail { border-color: #d9ddd2; background: #fffaf2; }
+.course-chalkboard .room-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.course-chalkboard .room-tabs button { min-width: 0; }
+.course-chalkboard .room-toolbar, .course-chalkboard .room-top, .course-chalkboard .goal { color: #28463d; }
 .g8-teacher-guide { display: flex; flex-direction: column; align-items: center; gap: 12px; position: static; min-width: 0; padding: 0 0 6px; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
-.g8-teacher-guide img { display: block; width: 112px; height: auto; }
+.g8-teacher-guide img { display: block; width: 86px; height: auto; }
 .g8-teacher-guide small { font-size: 10px; color: #84755e; }
 .g8-teacher-status { padding: 8px 12px; background: #f0e5cf; border-radius: 24px; color: #7c6145; font: 11px/1.4 'Trebuchet MS', sans-serif; text-align: center; }
 .g8-class-strip { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; background: #fffaf2; border: 1px solid #dfcfb7; border-radius: 12px; padding: 17px; }
@@ -58,26 +61,25 @@
 .g8-topic-link:hover { color: #926236; }
 .g8-topic-result { display: block; color: #858371; font-size: 11px; margin-top: 5px; }
 .g8-start-chapter { margin-top: 6px; padding: 12px 18px; }
+.g8-chapter-check { display: block; margin-top: 12px; padding: 10px 14px; border-color: #b8c0ae; color: #28463d; background: #f7f5ed; }
 .g8-catalogue-note { color: #7a7c68; font-size: 12px; line-height: 1.8; margin: 23px 0 0; max-width: 850px; }
 .g8-algebra-catalogue > button { margin-top: 20px; }
 .g8-class-strip :focus-visible, .g8-algebra-catalogue :focus-visible { outline: 3px solid #bb7535; outline-offset: 4px; }
 @media (max-width: 1100px) {
-  .grade8-algebra-board.in-classroom .columns { grid-template-columns: 1fr; }
-  .grade8-algebra-board.in-classroom .board { max-height: none; }
-  .g8-board-scene { grid-template-columns: minmax(0, 1fr) 140px; }
-  .g8-teacher-guide img { width: 133px; }
+  .course-chalkboard.in-classroom .columns { grid-template-columns: 1fr; }
+  .course-chalkboard.in-classroom .board { max-height: none; }
 }
 @media (max-width: 700px) {
   .g8-chapter-cards { grid-template-columns: 1fr; gap: 18px; }
   .g8-chapter-card { padding: 22px; }
   .g8-board-scene { grid-template-columns: minmax(0, 1fr); gap: 17px; }
-  .grade8-algebra-board.in-classroom .board { padding: 18px; min-height: 420px; border-width: 8px; }
+  .course-chalkboard.in-classroom .board { padding: 16px; min-height: 500px; border-width: 8px; }
   .g8-teacher-guide { flex-direction: row; justify-content: flex-end; padding: 0 8px; }
   .g8-teacher-guide img { width: 46px; }
   .g8-teacher-guide small { max-width: 50px; }
   .g8-class-strip { grid-template-columns: minmax(0, 1fr); }
   .g8-strip-actions button:last-child { margin-left: 0; }
-  .g8-board-heading h2 { font-size: 21px; }
+  .g8-board-heading h2 { font-size: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .g8-board-scene *, .g8-algebra-catalogue * { animation: none !important; transition: none !important; }
